@@ -6,6 +6,7 @@ import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -28,6 +29,12 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.nio.charset.Charset;
 
 public class MainFrame extends JFrame implements ActionListener
 {
@@ -60,6 +67,8 @@ public class MainFrame extends JFrame implements ActionListener
 	static final int MIN = -10;
 	static final int MAX = 10;
 	static final int INIT = 0;
+	
+	static int x;
 	
 	//-----Panel dolny-----
 	JButton reset, przycisk;
@@ -96,15 +105,45 @@ public class MainFrame extends JFrame implements ActionListener
 		menuBar.add(menu);
 		
 		medium = new JMenuItem("Wybierz oœrodek");
-		
 		medium = new JMenu("Wybierz osrodek");
+		
 		water = new JMenuItem("WODA");
+		//jesli wybierze wode n = 1,33
 		air = new JMenuItem("POWIETRZE");
+		//jesli wybierze powietrze n = 1
+		
 		medium.add(water);
 		medium.add(air);
 		menu.add(medium);
 		
 		save = new JMenuItem("Zapisz dane");
+  		save.addActionListener(new ActionListener() 
+  		{
+			
+			@Override
+			public void actionPerformed(ActionEvent e) 
+			{
+				 File dirPath = new File(System.getProperty("user.dir"));
+		            JFileChooser jchooser = new JFileChooser(dirPath);
+		            int returnVal = jchooser.showSaveDialog(null);
+		            if (returnVal==JFileChooser.APPROVE_OPTION) {
+		                try {
+		                    File outputFile = jchooser.getSelectedFile();
+		                    OutputStreamWriter osw = new OutputStreamWriter(
+		                            new FileOutputStream(outputFile),
+		                            Charset.forName("UTF-8").newEncoder()
+
+		                    );
+		                    osw.write(resultField.getText());
+		                    osw.close();
+		                } catch (FileNotFoundException e1) {
+		                    e1.printStackTrace();
+		                } catch (IOException e1) {
+		                    e1.printStackTrace();
+		                }}				
+			}
+		});
+		
 		menu.add(save);
 		
 		background = new JMenuItem("Wybierz kolor t³a");
@@ -288,13 +327,36 @@ public class MainFrame extends JFrame implements ActionListener
 		vSourceSlider = new JSlider(JSlider.HORIZONTAL, MIN, MAX, INIT);
 		vObserverLabel = new JLabel("Prêdkoœæ Obserwatora [m/s]");
 		vObserverSlider = new JSlider(JSlider.HORIZONTAL, MIN, MAX, INIT);
-		frequency = new JLabel("Czêstotliwoœæ:");
+		frequency = new JLabel("Czêstotliwoœæ [Hz]:");
 		frequencyField = new JTextField();
 		count = new JButton("OBLICZ");
 		result = new JLabel("Wyniki obliczeñ:");
 		resultField = new JTextField();
 		
-		
+		count.addActionListener(new ActionListener()
+		{
+			
+			@Override
+			public void actionPerformed(ActionEvent e) 
+			{
+
+                    String stringToParse = frequencyField.getText();
+                    Double parsedNumber = null;
+                   
+                    try
+                    {
+                    	 parsedNumber = Double.parseDouble(stringToParse);
+                    } 
+                    catch (Exception exp)
+                    {
+                            JOptionPane.showMessageDialog(null, "Czêstotlowoœæ musi byæ liczb¹. "
+                            		+ " Liczbe u³amkow¹ wprowadzamy za pomoc¹ KROPKI.",
+                                    "B³êdnie wprowadzone dane!",
+                                    JOptionPane.WARNING_MESSAGE);
+                    }
+             }
+		});
+			
 		vSourceSlider.setMajorTickSpacing(2);
 		vSourceSlider.setMinorTickSpacing(1);
 		vSourceSlider.setPaintTicks(true);
@@ -322,6 +384,19 @@ public class MainFrame extends JFrame implements ActionListener
 		//dolny.setLayout(new BoxLayout(dolny, BoxLayout.X_AXIS));
 		
 		reset = new JButton("Zeruj dane");
+		reset.addActionListener(new ActionListener() 
+		{
+			
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				frequencyField.setText("");
+				resultField.setText("");
+				vSourceSlider.setValue(0);
+				vObserverSlider.setValue(0);
+				
+			}
+		});
 		chart = new JLabel("Wykres");
 		//odglos = new JLabel("Odg³os Ÿród³a");
 		
@@ -372,7 +447,6 @@ public class MainFrame extends JFrame implements ActionListener
 	{
 		MainFrame frame = new MainFrame();
 		frame.setVisible(true);
-		
 	}
 
 	@Override
