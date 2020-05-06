@@ -1,6 +1,5 @@
 package pl.edu.pw.fizyka.pojava.PL_WL;
 
-import javax.print.DocFlavor.URL;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -22,7 +21,6 @@ import javax.swing.KeyStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.GraphicsConfiguration;
 import java.awt.GridLayout;
 import java.awt.HeadlessException;
@@ -40,7 +38,7 @@ public class MainFrame extends JFrame implements ActionListener
 	//-------MenuItem-------
 	JMenuBar menuBar;
 	JMenu help, menu;
-	JMenuItem medium, water, air, save, background, exit, info;
+	JMenuItem medium, water, air, save, background, exit, info, language, eng, esp, pol;
 	
 	//------Panel lewy------
 	JLabel vSourceLabel;
@@ -79,13 +77,16 @@ public class MainFrame extends JFrame implements ActionListener
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setTitle("Efekt Dopplera");
 		
-		icon = Toolkit.getDefaultToolkit().getImage("images/icon.png");    
+		
+		//-----------Dodawnie ikony--------------------------
+		icon = Toolkit.getDefaultToolkit().getImage("icon.png");    
 		this.setIconImage(icon); 
+		
 		
 		//------------Ustawienie okna na œrodku---------------
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
-		//--------------------------------------------------
+		
 		
 		//------------Menu----------------
 		menuBar = new JMenuBar();
@@ -140,12 +141,9 @@ public class MainFrame extends JFrame implements ActionListener
 		exit = new JMenuItem("Wyjdz");
 		menu.addSeparator();
 		menu.add(exit);
-		
-		exit.addActionListener(this);   
-  		exit.setAccelerator(KeyStroke.getKeyStroke("ctrl X"));
-  	
-  		
+	  
   		//------------ Wyjscie z programu----------------
+		exit.setAccelerator(KeyStroke.getKeyStroke("ctrl X"));
 		exit.addActionListener(new ActionListener() 
 		{
 			@Override
@@ -172,6 +170,101 @@ public class MainFrame extends JFrame implements ActionListener
 		});
 		help.add(info);
 		menuBar.add(help);
+		
+		//------------ Zmiana jezyka z menu----------------
+		language = new JMenu("Wybierz jêzyk");
+		help.add(language);
+		
+		eng = new JMenuItem("English", new ImageIcon("en_flag.png"));
+		eng.addActionListener(new ActionListener() 
+		{
+			
+			@Override
+			public void actionPerformed(ActionEvent e) 
+			{
+
+				help.setText("Help");
+				medium.setText("Choose medium");
+				water.setText("Water"); 
+				air.setText("Air");
+				save.setText("Save data"); 
+				background.setText("Set background kolor");
+				exit.setText("Exit");
+				info.setText("Info");
+				language.setText("Choose language");
+				vSourceLabel.setText("Velocity of source");
+				vObserverLabel.setText("Velocity of observer");
+				frequency.setText("Frequency");
+				count.setText("Count");
+				result.setText("Result");
+				reset.setText("Reset");
+				chart.setText("Chart");
+	
+			}
+		});
+		language.add(eng);
+		
+		esp = new JMenuItem("Espanol", new ImageIcon("sp.flag.png"));
+		esp.addActionListener(new ActionListener() 
+		{
+			
+			@Override
+			public void actionPerformed(ActionEvent e) 
+			{
+	
+				help.setText("Ayuda");
+				medium.setText("Seleccione un resort");
+				water.setText("Aqua"); 
+				air.setText("Aire");
+				save.setText("Guadar los datos"); 
+				background.setText("Elgir color de fondo");
+				exit.setText("Salia");
+				info.setText("Informacion");
+				language.setText("Elgir lengua");
+				vSourceLabel.setText("Velocidad de fuente");
+				vObserverLabel.setText("Velocidad del observador");
+				frequency.setText("Frecuencia");
+				count.setText("Calcular");
+				result.setText("Resultar");
+				reset.setText("Reiniciar");
+				chart.setText("Grafico");
+				
+				
+			}
+		});
+		
+		language.add(esp);
+		
+		pol = new JMenuItem("Polski", new ImageIcon("pl_flag.png"));
+		pol.addActionListener(new ActionListener() 
+		{
+			
+			@Override
+			public void actionPerformed(ActionEvent e) 
+			{
+				
+				help.setText("Pomoc");
+				medium.setText("Wybierz orodek");
+				water.setText("Woda"); 
+				air.setText("Powietrze");
+				save.setText("¿apisz dane"); 
+				background.setText("Wybierz kolor t³a");
+				exit.setText("Wyjœcie");
+				info.setText("Info");
+				language.setText("Wybierz jêzyk");
+				vSourceLabel.setText("Prêdkoœæ zród³¹");
+				vObserverLabel.setText("Prêdkoœæ obserwatora");
+				frequency.setText("Czêstotliwoœæ");
+				count.setText("Oblicz");
+				result.setText("Wynik");
+				reset.setText("Zeruj");
+				chart.setText("Wykres");
+				
+				
+			}
+		});
+		
+		language.add(pol);
 		
 		
 		//------------ Panel----------------
@@ -279,6 +372,7 @@ public class MainFrame extends JFrame implements ActionListener
 	{
 		MainFrame frame = new MainFrame();
 		frame.setVisible(true);
+		
 	}
 
 	@Override
