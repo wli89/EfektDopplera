@@ -1,5 +1,6 @@
 package pl.edu.pw.fizyka.pojava.PL_WL;
 
+
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -18,6 +19,8 @@ import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.KeyStroke;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -39,7 +42,7 @@ import java.nio.charset.Charset;
 public class MainFrame extends JFrame implements ActionListener
 {
 	Image icon;
-	
+
 	JPanel leftPanel, bottomPanel, centerPanel;
 	
 	//-------MenuItem-------
@@ -63,20 +66,22 @@ public class MainFrame extends JFrame implements ActionListener
 	
 	JLabel pusty1;
 	JLabel pusty2;
+	JLabel lab;
 	
 	static final int MIN = -10;
 	static final int MAX = 10;
 	static final int INIT = 0;
 	
 	static int x;
+	static int n=1;
 	
 	//-----Panel dolny-----
 	JButton reset, przycisk;
-	JLabel chart, sound;
+	JLabel chart;
 	JComboBox cb;
 	JToggleButton stopStart;
 	
-	ImageIcon obrazek2;
+	//ImageIcon obrazek2;
 	JButton button;
 	
 	
@@ -215,107 +220,48 @@ public class MainFrame extends JFrame implements ActionListener
 		help.add(language);
 		
 		eng = new JMenuItem("English", new ImageIcon("en_flag.png"));
-		eng.addActionListener(new ActionListener() 
-		{
-			
-			@Override
-			public void actionPerformed(ActionEvent e) 
-			{
-
-				help.setText("Help");
-				medium.setText("Choose medium");
-				water.setText("Water"); 
-				air.setText("Air");
-				save.setText("Save data"); 
-				background.setText("Set background kolor");
-				exit.setText("Exit");
-				info.setText("Info");
-				language.setText("Choose language");
-				vSourceLabel.setText("Velocity of source");
-				vObserverLabel.setText("Velocity of observer");
-				frequency.setText("Frequency");
-				count.setText("Count");
-				result.setText("Result");
-				reset.setText("Reset");
-				chart.setText("Chart");
-	
-			}
-		});
 		language.add(eng);
+		event1 e1 = new event1();
+		eng.addActionListener(e1);
 		
 		esp = new JMenuItem("Espanol", new ImageIcon("sp.flag.png"));
-		esp.addActionListener(new ActionListener() 
-		{
-			
-			@Override
-			public void actionPerformed(ActionEvent e) 
-			{
-	
-				help.setText("Ayuda");
-				medium.setText("Seleccione un resort");
-				water.setText("Aqua"); 
-				air.setText("Aire");
-				save.setText("Guadar los datos"); 
-				background.setText("Elgir color de fondo");
-				exit.setText("Salia");
-				info.setText("Informacion");
-				language.setText("Elgir lengua");
-				vSourceLabel.setText("Velocidad de fuente");
-				vObserverLabel.setText("Velocidad del observador");
-				frequency.setText("Frecuencia");
-				count.setText("Calcular");
-				result.setText("Resultar");
-				reset.setText("Reiniciar");
-				chart.setText("Grafico");
-				
-				
-			}
-		});
-		
 		language.add(esp);
+		event2 e2 = new event2();
+		esp.addActionListener(e2);
 		
 		pol = new JMenuItem("Polski", new ImageIcon("pl_flag.png"));
-		pol.addActionListener(new ActionListener() 
-		{
-			
-			@Override
-			public void actionPerformed(ActionEvent e) 
-			{
-				
-				help.setText("Pomoc");
-				medium.setText("Wybierz orodek");
-				water.setText("Woda"); 
-				air.setText("Powietrze");
-				save.setText("¿apisz dane"); 
-				background.setText("Wybierz kolor t³a");
-				exit.setText("Wyjœcie");
-				info.setText("Info");
-				language.setText("Wybierz jêzyk");
-				vSourceLabel.setText("Prêdkoœæ zród³¹");
-				vObserverLabel.setText("Prêdkoœæ obserwatora");
-				frequency.setText("Czêstotliwoœæ");
-				count.setText("Oblicz");
-				result.setText("Wynik");
-				reset.setText("Zeruj");
-				chart.setText("Wykres");
-				
-				
-			}
-		});
-		
 		language.add(pol);
-		
+		event3 e3 = new event3();
+		pol.addActionListener(e3);
+			
 		
 		//------------ Panel----------------
 		leftPanel = new JPanel();
 		centerPanel = new JPanel();
 		bottomPanel = new JPanel();
 		centerPanel.setBackground(Color.WHITE);
-
+		
 		this.add(leftPanel, BorderLayout.LINE_START);
 		this.add(centerPanel, BorderLayout.CENTER);
 		this.add(bottomPanel, BorderLayout.PAGE_END);
 		
+		//-------------Centralny panel----------
+	
+		/*ImagePanel obrazek = new ImagePanel();
+		//setSize(obrazek.getPreferredSize());
+		
+		
+		JPanel centerPanel = new JPanel();
+		JPanel leftPanel = new JPanel();
+		JPanel rightPanel = new JPanel();
+		
+		this.add(leftPanel, BorderLayout.PAGE_START);
+		this.add(centerPanel, BorderLayout.CENTER);
+		this.add(rightPanel, BorderLayout.PAGE_END);
+		
+		rightPanel.setBackground(Color.WHITE);
+		
+		centerPanel.add(obrazek);*/
 		
 		//------------ Lewy Panel----------------
 		leftPanel.setLayout(new GridLayout(11,1));
@@ -323,39 +269,24 @@ public class MainFrame extends JFrame implements ActionListener
 		pusty1 = new JLabel();
 		pusty2 = new JLabel();
 		
-		vSourceLabel = new JLabel("Prêdkoœæ ród³a [m/s]");
+		vSourceLabel = new JLabel("Prêdkoœæ ród³a [m/s]:   0 ");   
 		vSourceSlider = new JSlider(JSlider.HORIZONTAL, MIN, MAX, INIT);
-		vObserverLabel = new JLabel("Prêdkoœæ Obserwatora [m/s]");
+		vObserverLabel = new JLabel("Prêdkoœæ Obserwatora [m/s]:   0 ");
 		vObserverSlider = new JSlider(JSlider.HORIZONTAL, MIN, MAX, INIT);
 		frequency = new JLabel("Czêstotliwoœæ [Hz]:");
 		frequencyField = new JTextField();
 		count = new JButton("OBLICZ");
 		result = new JLabel("Wyniki obliczeñ:");
 		resultField = new JTextField();
+		resultField.getScrollableTracksViewportHeight();
 		
-		count.addActionListener(new ActionListener()
-		{
-			
-			@Override
-			public void actionPerformed(ActionEvent e) 
-			{
-
-                    String stringToParse = frequencyField.getText();
-                    Double parsedNumber = null;
-                   
-                    try
-                    {
-                    	 parsedNumber = Double.parseDouble(stringToParse);
-                    } 
-                    catch (Exception exp)
-                    {
-                            JOptionPane.showMessageDialog(null, "Czêstotlowoœæ musi byæ liczb¹. "
-                            		+ " Liczbe u³amkow¹ wprowadzamy za pomoc¹ KROPKI.",
-                                    "B³êdnie wprowadzone dane!",
-                                    JOptionPane.WARNING_MESSAGE);
-                    }
-             }
-		});
+		ValueOfSlider e = new ValueOfSlider();
+		vSourceSlider.addChangeListener(e);
+		vObserverSlider.addChangeListener(e);
+		
+		Calculations e4 = new Calculations();
+		count.addActionListener(e4);
+		
 			
 		vSourceSlider.setMajorTickSpacing(2);
 		vSourceSlider.setMinorTickSpacing(1);
@@ -375,7 +306,7 @@ public class MainFrame extends JFrame implements ActionListener
 		leftPanel.add(frequency);
 		leftPanel.add(frequencyField);
 		leftPanel.add(count);
-		leftPanel.add(pusty2);
+		//leftPanel.add(pusty2);
 		leftPanel.add(result);
 		leftPanel.add(resultField);
 		
@@ -427,8 +358,182 @@ public class MainFrame extends JFrame implements ActionListener
 		//------------------------------
 		
 	}  
-	   
-	   
+
+	public class ValueOfSlider implements ChangeListener	
+	{
+		public void stateChanged(ChangeEvent e)
+		{
+			int value = vSourceSlider.getValue();
+			vSourceLabel.setText("Prêdkoœæ ród³a [m/s]:   " + value);
+			
+			int value2 = vObserverSlider.getValue();
+			vObserverLabel.setText("Prêdkoœæ Obserwatowa [m/s]:   " + value2);
+			
+		}
+	}
+	
+	public class event1 implements ActionListener	
+	{
+		public void actionPerformed(ActionEvent e1)
+		{
+			help.setText("Help");
+			medium.setText("Choose medium");
+			water.setText("Water"); 
+			air.setText("Air");
+			save.setText("Save data"); 
+			background.setText("Set background kolor");
+			exit.setText("Exit");
+			info.setText("Info");
+			language.setText("Choose language");
+			vSourceLabel.setText("Velocity of source");
+			vObserverLabel.setText("Velocity of observer");
+			frequency.setText("Frequency");
+			count.setText("Count");
+			result.setText("Result");
+			reset.setText("Reset");
+			chart.setText("Chart");
+			
+		}
+	}
+	public class event2 implements ActionListener	
+	{
+		public void actionPerformed(ActionEvent e2)
+		{
+			help.setText("Ayuda");
+			medium.setText("Seleccione un resort");
+			water.setText("Aqua"); 
+			air.setText("Aire");
+			save.setText("Guadar los datos"); 
+			background.setText("Elgir color de fondo");
+			exit.setText("Salia");
+			info.setText("Informacion");
+			language.setText("Elgir lengua");
+			vSourceLabel.setText("Velocidad de fuente");
+			vObserverLabel.setText("Velocidad del observador");
+			frequency.setText("Frecuencia");
+			count.setText("Calcular");
+			result.setText("Resultar");
+			reset.setText("Reiniciar");
+			chart.setText("Grafico");
+		}
+	}
+	public class event3 implements ActionListener	
+	{
+		public void actionPerformed(ActionEvent e3)
+		{
+			help.setText("Pomoc");
+			medium.setText("Wybierz orodek");
+			water.setText("Woda"); 
+			air.setText("Powietrze");
+			save.setText("¿apisz dane"); 
+			background.setText("Wybierz kolor t³a");
+			exit.setText("Wyjœcie");
+			info.setText("Info");
+			language.setText("Wybierz jêzyk");
+			vSourceLabel.setText("Prêdkoœæ zród³¹");
+			vObserverLabel.setText("Prêdkoœæ obserwatora");
+			frequency.setText("Czêstotliwoœæ");
+			count.setText("Oblicz");
+			result.setText("Wynik");
+			reset.setText("Zeruj");
+			chart.setText("Wykres");
+		}
+	}
+	
+	public class Calculations implements ActionListener
+	{
+		public void actionPerformed(ActionEvent e) //wypisywanie liczb
+        {											
+            double number;
+            String freq = frequencyField.getText();
+            int vSo = vSourceSlider.getValue();
+            int vOb = vObserverSlider.getValue();
+            int vPr = 360;
+        	
+            try
+            {
+                number = Double.parseDouble(freq);
+                resultField.setText(resultField.getText()+ "fs = " + number);	
+           
+                resultField.setText(resultField.getText()+ "; Vs = " + vSo);	
+                
+                resultField.setText(resultField.getText()+ "; Vob = " + vOb);
+                
+                if(vOb == vSo )	
+                {
+                	resultField.setText(resultField.getText()+"; f ="+ number);
+                }
+                else if(vOb == 0 & vSo>0)
+                {
+                  	double v = vPr+vSo;
+                	resultField.setText(resultField.getText()+"; f = "+ number*(vPr/v));
+                }
+                 else if(vOb == 0 & vSo<0)
+                {
+                	 double v = vPr-vSo;
+                	resultField.setText(resultField.getText()+"; f ="+ (number*(vPr/v)));
+                }
+                 else if(vOb<0 & vSo==0)
+                {
+                 	double v = vPr-vOb;
+                	resultField.setText(resultField.getText()+"; f ="+ (number*(v/vPr)));
+                }
+                else if(vOb>0 & vSo==0)
+                {
+                	double v = vPr+vOb;
+                	resultField.setText(resultField.getText()+"; f ="+ (number*(v/vPr)));
+                }
+                else if(vOb>0 & vSo<0)//Obs i zr poruszaja sie w prawo; f'>f
+                {
+                	double v = vPr+vOb;
+                	double v1 = vPr-vSo;
+                	resultField.setText(resultField.getText()+"; f ="+ (number*(v/v1)));
+                }
+                else if(vOb<0 & vSo>0)
+                {
+                	double v = vPr-vOb;
+                	double v1 = vPr+vSo;
+                	resultField.setText(resultField.getText()+"; f ="+ (number*(v/v1)));
+                }
+                else if(vOb>0 & vSo>0 & vOb>vSo)
+                {
+                	double v = vPr+vOb;
+                	double v1 = vPr-vSo;
+                	resultField.setText(resultField.getText()+"; f ="+ (number*(v/v1)));
+                }
+                else if(vOb>0 & vSo>0 & vOb<vSo)
+                {
+                	double v = vPr-vOb;
+                	double v1 = vPr+vSo;
+                	resultField.setText(resultField.getText()+"; f ="+ (number*(v/v1)));
+                }
+                else if(vOb<0 & vSo<0 & vOb<vSo)
+                {
+                	double v = vPr+vOb;
+                	double v1 = vPr-vSo;
+                	resultField.setText(resultField.getText()+"; f ="+ (number*(v/v1)));
+                }
+                else if(vOb<0 & vSo<0 & vOb>vSo)
+                {
+                	double v = vPr-vOb;
+                	double v1 = vPr+vSo;
+                	resultField.setText(resultField.getText()+"; f ="+ (number*(v/v1)));
+                }
+                
+            
+            }
+            
+            catch(NumberFormatException exception)	//wypisuje, gdy podamy np litery
+            {
+            	 JOptionPane.showMessageDialog(null, "Czêstotlowoœæ musi byæ liczb¹. "
+                 		+ " Liczbe u³amkow¹ wprowadzamy za pomoc¹ KROPKI.",
+                         "B³êdnie wprowadzone dane!",
+                         JOptionPane.WARNING_MESSAGE);
+            }
+
+        }
+
+	}
 	public MainFrame(GraphicsConfiguration arg0)
 	{
 		super(arg0);
