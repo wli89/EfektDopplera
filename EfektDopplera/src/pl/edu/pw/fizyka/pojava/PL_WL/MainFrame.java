@@ -22,6 +22,13 @@ import javax.swing.KeyStroke;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -78,14 +85,20 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 	static int n=1;
 	
 	//-----Panel dolny-----
-	JButton reset, przycisk;
-	JLabel chart;
+	JButton reset, przycisk, chart;
 	JComboBox cb;
 	JToggleButton stopStart;
 	
 	JButton button;
 	
+	//----------Wykres
+	private XYSeries series1;
+	private XYSeriesCollection dataset1;
+	//private Random rand;
+	JFreeChart lineGraph;
+	private ChartPanel chartPanel;
 	
+	//---------------------------------------------------
 	public MainFrame() throws HeadlessException
 	{
 		this.setSize(1050,700);
@@ -302,8 +315,9 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 	    ClearData e7 = new ClearData();
 	    reset.addActionListener(e7);
 
-		chart = new JLabel("Wykres");
-		//odglos = new JLabel("Odg³os Ÿród³a");
+		chart = new JButton("Wykres");
+		ShowChart e8 = new ShowChart();
+		chart.addActionListener(e8);
 		
 		String sounds[]={"Brak dzwiêku", "Odg³os zrodl aa", "Odg³os zrodl bb",};        
 	    cb = new JComboBox(sounds);    
@@ -338,17 +352,17 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
         {	
 			if(e5.getActionCommand().equals("WODA"))
 			{
-				lab1.setText("V oœrodka [m/s] - WODA");
+				lab1.setText("V w oœrodku [m/s] - WODA");
 				lab2.setText("1490");
 			}
 			else if(e5.getActionCommand().equals("POWIETRZE"))
 			{
-				lab1.setText("V oœrodka [m/s] - POWIETRZE");
+				lab1.setText("V w oœrodku [m/s] - POWIETRZE");
 				lab2.setText("v343");
 			}
 			else if(e5.getActionCommand().equals("DWUTLENEK WÊGLA"))
 			{
-				lab1.setText("V oœrodka [m/s]  - DWUTLENEK WÊGLA");
+				lab1.setText("V w oœrodku [m/s]  - DWUTLENEK WÊGLA");
 				lab2.setText("259");
 			}
 			
@@ -407,6 +421,7 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 			result.setText("Result");
 			reset.setText("Reset");
 			chart.setText("Chart");
+			lab1.setText("V in medium [m/s] - WATER");
 			
 		}
 	}
@@ -430,6 +445,7 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 			result.setText("Resultar");
 			reset.setText("Reiniciar");
 			chart.setText("Grafico");
+			lab1.setText("V en resort [m/s] - AQUA");
 		}
 	}
 	public class ChangeToPolish implements ActionListener	//Weronika Lis
@@ -452,6 +468,7 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 			result.setText("Wynik");
 			reset.setText("Zeruj");
 			chart.setText("Wykres");
+			lab1.setText("V w oœrodku [m/s] - WODA");
 		}
 	}
 	
@@ -494,6 +511,7 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
                 	double fk = number;
                 	resultField.setText(resultField.getText()+ "; f ="+ fk + "Hz");
                 	resultField.setText(resultField.getText()+ "; T ="+ (1/fk) + "s");
+                	resultField.setText(resultField.getText()+ "; df ="+ (vMe/fk) + "m");
                 }
                 else if(vOb == 0 & vSo>0)
                 {
@@ -501,6 +519,7 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
                   	double fk = number*(vMe/v);
                 	resultField.setText(resultField.getText()+ "; f = "+ fk + "Hz");
                 	resultField.setText(resultField.getText()+ "; T ="+ (1/fk) + "s");
+                	resultField.setText(resultField.getText()+ "; df ="+ (vMe/fk) + "m");
                 }
                  else if(vOb == 0 & vSo<0)
                 {
@@ -508,6 +527,7 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
                 	 double fk = number*(vMe/v);
                 	resultField.setText(resultField.getText()+ "; f ="+ fk + "Hz");
                 	resultField.setText(resultField.getText()+ "; T ="+ (1/fk) + "s");
+                	resultField.setText(resultField.getText()+ "; df ="+ (vMe/fk) + "m");
                 }
                  else if(vOb<0 & vSo==0)
                 {
@@ -515,6 +535,7 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
                  	double fk = number*(v/vMe);
                 	resultField.setText(resultField.getText()+ "; f ="+ fk + "Hz");
                 	resultField.setText(resultField.getText()+ "; T ="+ (1/fk) + "s");
+                	resultField.setText(resultField.getText()+ "; df ="+ (vMe/fk) + "m");
                 }
                 else if(vOb>0 & vSo==0)
                 {
@@ -522,6 +543,7 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
                 	double fk = number*(v/vMe);
                 	resultField.setText(resultField.getText()+ "; f ="+ fk + "Hz");
                 	resultField.setText(resultField.getText()+ "; T ="+ (1/fk) + "s");
+                	resultField.setText(resultField.getText()+ "; df ="+ (vMe/fk) + "m");
                 }
                 else if(vOb>0 & vSo<0)//Obs i zr poruszaja sie w prawo; f'>f
                 {
@@ -530,6 +552,7 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
                 	double fk = number*(v/v1);
                 	resultField.setText(resultField.getText()+ "; f ="+ fk + "Hz");
                 	resultField.setText(resultField.getText()+ "; T ="+ (1/fk) + "s");
+                	resultField.setText(resultField.getText()+ "; df ="+ (vMe/fk) + "m");
                 }
                 else if(vOb<0 & vSo>0)
                 {
@@ -538,6 +561,7 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
                 	double fk = number*(v/v1);
                 	resultField.setText(resultField.getText()+ "; f ="+ fk + "Hz");
                 	resultField.setText(resultField.getText()+ "; T ="+ (1/fk) + "s");
+                	resultField.setText(resultField.getText()+ "; df ="+ (vMe/fk) + "m");
                 }
                 else if(vOb>0 & vSo>0 & vOb>vSo)
                 {
@@ -546,6 +570,7 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
                 	double fk = number*(v/v1);
                 	resultField.setText(resultField.getText()+ "; f ="+ fk + "Hz");
                 	resultField.setText(resultField.getText()+ "; T ="+ (1/fk) + "s");
+                	resultField.setText(resultField.getText()+ "; df ="+ (vMe/fk) + "m");
                 }
                 else if(vOb>0 & vSo>0 & vOb<vSo)
                 {
@@ -554,6 +579,7 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
                 	double fk = number*(v/v1);
                 	resultField.setText(resultField.getText()+ "; f ="+ fk + "Hz");
                 	resultField.setText(resultField.getText()+ "; T ="+ (1/fk) + "s");
+                	resultField.setText(resultField.getText()+ "; df ="+ (vMe/fk) + "m");
                 }
                 else if(vOb<0 & vSo<0 & vOb<vSo)
                 {
@@ -562,6 +588,7 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
                 	double fk = number*(v/v1);
                 	resultField.setText(resultField.getText()+ "; f ="+ fk + "Hz");
                 	resultField.setText(resultField.getText()+ "; T ="+ (1/fk) + "s");
+                	resultField.setText(resultField.getText()+ "; df ="+ (vMe/fk) + "m");
                 }
                 else if(vOb<0 & vSo<0 & vOb>vSo)
                 {
@@ -570,6 +597,7 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
                 	double fk = number*(v/v1);
                 	resultField.setText(resultField.getText()+ "; f ="+ fk + "Hz");
                 	resultField.setText(resultField.getText()+ "; T ="+ (1/fk) + "s");
+                	resultField.setText(resultField.getText()+ "; df ="+ (vMe/fk) + "m");
                 }
             }
             
@@ -597,6 +625,49 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 			lab2.setText("343");
         }
 	}	
+	public class ShowChart implements ActionListener	//Weronika Lis	
+	{
+		public void actionPerformed(ActionEvent e8) 
+        {
+			MainFrame frame = new MainFrame();
+			
+			series1 = new XYSeries("dane", true, true);
+			dataset1 = new XYSeriesCollection();
+			dataset1.addSeries(series1);
+			//rand = new Random();
+			
+			lineGraph = ChartFactory.createXYLineChart(
+					"Tytu³ wykresu", "X", "Y",
+					dataset1,	//dane
+					PlotOrientation.VERTICAL,	//orientacja
+					true,	//legenda
+					true,	//wskazowki
+					false);
+			//series1.clear();	//uzuwanie poprzedniej serii  
+			lineGraph.setTitle("Funkcja sinus");
+			for(int i = 0; i < 100; i++)
+			{
+				double x = (i)/10.0;
+				double y = Math.sin(x);
+				series1.addOrUpdate(x,y);
+			}
+			
+			chartPanel = new ChartPanel(lineGraph); 
+			frame.add(chartPanel);
+			frame.setVisible(true);
+        }
+
+		public void setVisible(boolean b) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void setSize(int i, int j) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
 	public MainFrame(GraphicsConfiguration arg0)
 	{
 		super(arg0);
@@ -625,3 +696,4 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 	}
 
 }
+
