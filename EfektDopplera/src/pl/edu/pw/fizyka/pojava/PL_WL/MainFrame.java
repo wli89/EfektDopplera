@@ -39,7 +39,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 
-public class MainFrame extends JFrame implements ActionListener
+public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedziewicz
 {
 	Image icon;
 
@@ -48,7 +48,9 @@ public class MainFrame extends JFrame implements ActionListener
 	//-------MenuItem-------
 	JMenuBar menuBar;
 	JMenu help, menu;
-	JMenuItem medium, water, air, save, background, exit, info, language, eng, esp, pol;
+	JMenuItem medium, water, air, carbon;
+	JMenuItem save, background, exit;
+	JMenuItem info, language, eng, esp, pol;
 	
 	//------Panel lewy------
 	JLabel vSourceLabel;
@@ -64,8 +66,8 @@ public class MainFrame extends JFrame implements ActionListener
 	JLabel result;
 	JTextField resultField;
 	
-	JLabel pusty1;
-	JLabel pusty2;
+	JLabel empty;
+	JLabel lab1, lab2;
 	JLabel lab;
 	
 	static final int MIN = -10;
@@ -81,13 +83,12 @@ public class MainFrame extends JFrame implements ActionListener
 	JComboBox cb;
 	JToggleButton stopStart;
 	
-	//ImageIcon obrazek2;
 	JButton button;
 	
 	
 	public MainFrame() throws HeadlessException
 	{
-		this.setSize(1000,600);
+		this.setSize(1050,700);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setTitle("Efekt Dopplera");
 		
@@ -113,42 +114,25 @@ public class MainFrame extends JFrame implements ActionListener
 		medium = new JMenu("Wybierz osrodek");
 		
 		water = new JMenuItem("WODA");
-		//jesli wybierze wode n = 1,33
 		air = new JMenuItem("POWIETRZE");
-		//jesli wybierze powietrze n = 1
+		carbon = new JMenuItem("DWUTLENEK WÊGLA");
+		
+		ChangeMedium e5 = new ChangeMedium();
+		water.setActionCommand("WODA");
+		water.addActionListener(e5);
+		air.setActionCommand("POWIETRZE");
+		air.addActionListener(e5);
+		carbon.setActionCommand("DWUTLENEK WÊGLA");
+		carbon.addActionListener(e5);
 		
 		medium.add(water);
 		medium.add(air);
+		medium.add(carbon);
 		menu.add(medium);
 		
 		save = new JMenuItem("Zapisz dane");
-  		save.addActionListener(new ActionListener() 
-  		{
-			
-			@Override
-			public void actionPerformed(ActionEvent e) 
-			{
-				 File dirPath = new File(System.getProperty("user.dir"));
-		            JFileChooser jchooser = new JFileChooser(dirPath);
-		            int returnVal = jchooser.showSaveDialog(null);
-		            if (returnVal==JFileChooser.APPROVE_OPTION) {
-		                try {
-		                    File outputFile = jchooser.getSelectedFile();
-		                    OutputStreamWriter osw = new OutputStreamWriter(
-		                            new FileOutputStream(outputFile),
-		                            Charset.forName("UTF-8").newEncoder()
-
-		                    );
-		                    osw.write(resultField.getText());
-		                    osw.close();
-		                } catch (FileNotFoundException e1) {
-		                    e1.printStackTrace();
-		                } catch (IOException e1) {
-		                    e1.printStackTrace();
-		                }}				
-			}
-		});
-		
+		SaveFile e6 = new SaveFile();
+		save.addActionListener(e6);
 		menu.add(save);
 		
 		background = new JMenuItem("Wybierz kolor t³a");
@@ -221,17 +205,17 @@ public class MainFrame extends JFrame implements ActionListener
 		
 		eng = new JMenuItem("English", new ImageIcon("en_flag.png"));
 		language.add(eng);
-		event1 e1 = new event1();
+		ChangeToEnglish e1 = new ChangeToEnglish();
 		eng.addActionListener(e1);
 		
 		esp = new JMenuItem("Espanol", new ImageIcon("sp.flag.png"));
 		language.add(esp);
-		event2 e2 = new event2();
+		ChangeToSpanish e2 = new ChangeToSpanish();
 		esp.addActionListener(e2);
 		
 		pol = new JMenuItem("Polski", new ImageIcon("pl_flag.png"));
 		language.add(pol);
-		event3 e3 = new event3();
+		ChangeToPolish e3 = new ChangeToPolish();
 		pol.addActionListener(e3);
 			
 		
@@ -266,8 +250,9 @@ public class MainFrame extends JFrame implements ActionListener
 		//------------ Lewy Panel----------------
 		leftPanel.setLayout(new GridLayout(11,1));
 		leftPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
-		pusty1 = new JLabel();
-		pusty2 = new JLabel();
+		
+		lab1 = new JLabel("V oœrodek [m/s] - POWIETRZE");
+		lab2 = new JLabel("343");
 		
 		vSourceLabel = new JLabel("Prêdkoœæ ród³a [m/s]:   0 ");   
 		vSourceSlider = new JSlider(JSlider.HORIZONTAL, MIN, MAX, INIT);
@@ -302,32 +287,21 @@ public class MainFrame extends JFrame implements ActionListener
 		leftPanel.add(vSourceSlider);
 		leftPanel.add(vObserverLabel);
 		leftPanel.add(vObserverSlider);
-		leftPanel.add(pusty1);
+		leftPanel.add(lab1);
+		leftPanel.add(lab2);
 		leftPanel.add(frequency);
 		leftPanel.add(frequencyField);
 		leftPanel.add(count);
-		//leftPanel.add(pusty2);
 		leftPanel.add(result);
 		leftPanel.add(resultField);
 		
 		
 		//------------ Dolny Panel----------------
 		//dolny.setLayout(new BoxLayout(dolny, BoxLayout.X_AXIS));
-		
 		reset = new JButton("Zeruj dane");
-		reset.addActionListener(new ActionListener() 
-		{
-			
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				frequencyField.setText("");
-				resultField.setText("");
-				vSourceSlider.setValue(0);
-				vObserverSlider.setValue(0);
-				
-			}
-		});
+	    ClearData e7 = new ClearData();
+	    reset.addActionListener(e7);
+
 		chart = new JLabel("Wykres");
 		//odglos = new JLabel("Odg³os Ÿród³a");
 		
@@ -358,21 +332,62 @@ public class MainFrame extends JFrame implements ActionListener
 		//------------------------------
 		
 	}  
-
-	public class ValueOfSlider implements ChangeListener	
+	public class ChangeMedium implements ActionListener	//Weronika Lis	
 	{
-		public void stateChanged(ChangeEvent e)
+		public void actionPerformed(ActionEvent e5) 
+        {	
+			if(e5.getActionCommand().equals("WODA"))
+			{
+				lab1.setText("V oœrodka [m/s] - WODA");
+				lab2.setText("1490");
+			}
+			else if(e5.getActionCommand().equals("POWIETRZE"))
+			{
+				lab1.setText("V oœrodka [m/s] - POWIETRZE");
+				lab2.setText("v343");
+			}
+			else if(e5.getActionCommand().equals("DWUTLENEK WÊGLA"))
+			{
+				lab1.setText("V oœrodka [m/s]  - DWUTLENEK WÊGLA");
+				lab2.setText("259");
+			}
+			
+        }
+	}
+	
+	public class SaveFile implements ActionListener		//Weronika Lis	
+	{
+		public void actionPerformed(ActionEvent e6)
 		{
-			int value = vSourceSlider.getValue();
-			vSourceLabel.setText("Prêdkoœæ ród³a [m/s]:   " + value);
-			
-			int value2 = vObserverSlider.getValue();
-			vObserverLabel.setText("Prêdkoœæ Obserwatowa [m/s]:   " + value2);
-			
+			File dirPath = new File(System.getProperty("user.dir"));
+            JFileChooser jchooser = new JFileChooser(dirPath);
+            int returnVal = jchooser.showSaveDialog(null); 
+            if (returnVal==JFileChooser.APPROVE_OPTION) 
+            {
+                try 
+                {
+                    File outputFile = jchooser.getSelectedFile();
+                    OutputStreamWriter osw = new OutputStreamWriter(
+                            new FileOutputStream(outputFile),
+                            Charset.forName("UTF-8").newEncoder()
+
+                    );
+                    osw.write(resultField.getText());
+                    osw.close();
+                } 
+                catch (FileNotFoundException e1)
+                {
+                    e1.printStackTrace();
+                }
+                catch (IOException e1) 
+                {
+                    e1.printStackTrace();
+                }
+             }				
 		}
 	}
 	
-	public class event1 implements ActionListener	
+	public class ChangeToEnglish implements ActionListener	//Weronika Lis	
 	{
 		public void actionPerformed(ActionEvent e1)
 		{
@@ -395,7 +410,7 @@ public class MainFrame extends JFrame implements ActionListener
 			
 		}
 	}
-	public class event2 implements ActionListener	
+	public class ChangeToSpanish implements ActionListener	//Weronika Lis
 	{
 		public void actionPerformed(ActionEvent e2)
 		{
@@ -417,7 +432,7 @@ public class MainFrame extends JFrame implements ActionListener
 			chart.setText("Grafico");
 		}
 	}
-	public class event3 implements ActionListener	
+	public class ChangeToPolish implements ActionListener	//Weronika Lis
 	{
 		public void actionPerformed(ActionEvent e3)
 		{
@@ -440,87 +455,122 @@ public class MainFrame extends JFrame implements ActionListener
 		}
 	}
 	
-	public class Calculations implements ActionListener
+	public class ValueOfSlider implements ChangeListener	//Weronika Lis
+	{
+		public void stateChanged(ChangeEvent e)
+		{
+			int value = vSourceSlider.getValue();
+			vSourceLabel.setText("Prêdkoœæ ród³a [m/s]:   " + value);
+			
+			int value2 = vObserverSlider.getValue();
+			vObserverLabel.setText("Prêdkoœæ Obserwatowa [m/s]:   " + value2);
+			
+		}
+	}
+	
+	public class Calculations implements ActionListener	//Weronika Lis
 	{
 		public void actionPerformed(ActionEvent e) //wypisywanie liczb
-        {											
-            double number;
+        {	
+            double number, vMe;
             String freq = frequencyField.getText();
+            String medium = lab2.getText();
             int vSo = vSourceSlider.getValue();
             int vOb = vObserverSlider.getValue();
-            int vPr = 360;
-        	
+           
+            
             try
             {
                 number = Double.parseDouble(freq);
-                resultField.setText(resultField.getText()+ "fs = " + number);	
+                vMe = Double.parseDouble(medium);
+                resultField.setText(resultField.getText()+ "fs = " + number + "Hz");	
            
-                resultField.setText(resultField.getText()+ "; Vs = " + vSo);	
+                resultField.setText(resultField.getText()+ "; Vs = " + vSo + "m/s");	
                 
-                resultField.setText(resultField.getText()+ "; Vob = " + vOb);
+                resultField.setText(resultField.getText()+ "; Vob = " + vOb + "m/s");
                 
                 if(vOb == vSo )	
                 {
-                	resultField.setText(resultField.getText()+"; f ="+ number);
+                	double fk = number;
+                	resultField.setText(resultField.getText()+ "; f ="+ fk + "Hz");
+                	resultField.setText(resultField.getText()+ "; T ="+ (1/fk) + "s");
                 }
                 else if(vOb == 0 & vSo>0)
                 {
-                  	double v = vPr+vSo;
-                	resultField.setText(resultField.getText()+"; f = "+ number*(vPr/v));
+                  	double v = vMe+vSo;
+                  	double fk = number*(vMe/v);
+                	resultField.setText(resultField.getText()+ "; f = "+ fk + "Hz");
+                	resultField.setText(resultField.getText()+ "; T ="+ (1/fk) + "s");
                 }
                  else if(vOb == 0 & vSo<0)
                 {
-                	 double v = vPr-vSo;
-                	resultField.setText(resultField.getText()+"; f ="+ (number*(vPr/v)));
+                	 double v = vMe-vSo;
+                	 double fk = number*(vMe/v);
+                	resultField.setText(resultField.getText()+ "; f ="+ fk + "Hz");
+                	resultField.setText(resultField.getText()+ "; T ="+ (1/fk) + "s");
                 }
                  else if(vOb<0 & vSo==0)
                 {
-                 	double v = vPr-vOb;
-                	resultField.setText(resultField.getText()+"; f ="+ (number*(v/vPr)));
+                 	double v = vMe-vOb;
+                 	double fk = number*(v/vMe);
+                	resultField.setText(resultField.getText()+ "; f ="+ fk + "Hz");
+                	resultField.setText(resultField.getText()+ "; T ="+ (1/fk) + "s");
                 }
                 else if(vOb>0 & vSo==0)
                 {
-                	double v = vPr+vOb;
-                	resultField.setText(resultField.getText()+"; f ="+ (number*(v/vPr)));
+                	double v = vMe+vOb;
+                	double fk = number*(v/vMe);
+                	resultField.setText(resultField.getText()+ "; f ="+ fk + "Hz");
+                	resultField.setText(resultField.getText()+ "; T ="+ (1/fk) + "s");
                 }
                 else if(vOb>0 & vSo<0)//Obs i zr poruszaja sie w prawo; f'>f
                 {
-                	double v = vPr+vOb;
-                	double v1 = vPr-vSo;
-                	resultField.setText(resultField.getText()+"; f ="+ (number*(v/v1)));
+                	double v = vMe+vOb;
+                	double v1 = vMe-vSo;
+                	double fk = number*(v/v1);
+                	resultField.setText(resultField.getText()+ "; f ="+ fk + "Hz");
+                	resultField.setText(resultField.getText()+ "; T ="+ (1/fk) + "s");
                 }
                 else if(vOb<0 & vSo>0)
                 {
-                	double v = vPr-vOb;
-                	double v1 = vPr+vSo;
-                	resultField.setText(resultField.getText()+"; f ="+ (number*(v/v1)));
+                	double v = vMe-vOb;
+                	double v1 = vMe+vSo;
+                	double fk = number*(v/v1);
+                	resultField.setText(resultField.getText()+ "; f ="+ fk + "Hz");
+                	resultField.setText(resultField.getText()+ "; T ="+ (1/fk) + "s");
                 }
                 else if(vOb>0 & vSo>0 & vOb>vSo)
                 {
-                	double v = vPr+vOb;
-                	double v1 = vPr-vSo;
-                	resultField.setText(resultField.getText()+"; f ="+ (number*(v/v1)));
+                	double v = vMe+vOb;
+                	double v1 = vMe-vSo;
+                	double fk = number*(v/v1);
+                	resultField.setText(resultField.getText()+ "; f ="+ fk + "Hz");
+                	resultField.setText(resultField.getText()+ "; T ="+ (1/fk) + "s");
                 }
                 else if(vOb>0 & vSo>0 & vOb<vSo)
                 {
-                	double v = vPr-vOb;
-                	double v1 = vPr+vSo;
-                	resultField.setText(resultField.getText()+"; f ="+ (number*(v/v1)));
+                	double v = vMe-vOb;
+                	double v1 = vMe+vSo;
+                	double fk = number*(v/v1);
+                	resultField.setText(resultField.getText()+ "; f ="+ fk + "Hz");
+                	resultField.setText(resultField.getText()+ "; T ="+ (1/fk) + "s");
                 }
                 else if(vOb<0 & vSo<0 & vOb<vSo)
                 {
-                	double v = vPr+vOb;
-                	double v1 = vPr-vSo;
-                	resultField.setText(resultField.getText()+"; f ="+ (number*(v/v1)));
+                	double v = vMe+vOb;
+                	double v1 = vMe-vSo;
+                	double fk = number*(v/v1);
+                	resultField.setText(resultField.getText()+ "; f ="+ fk + "Hz");
+                	resultField.setText(resultField.getText()+ "; T ="+ (1/fk) + "s");
                 }
                 else if(vOb<0 & vSo<0 & vOb>vSo)
                 {
-                	double v = vPr-vOb;
-                	double v1 = vPr+vSo;
-                	resultField.setText(resultField.getText()+"; f ="+ (number*(v/v1)));
+                	double v = vMe-vOb;
+                	double v1 = vMe+vSo;
+                	double fk = number*(v/v1);
+                	resultField.setText(resultField.getText()+ "; f ="+ fk + "Hz");
+                	resultField.setText(resultField.getText()+ "; T ="+ (1/fk) + "s");
                 }
-                
-            
             }
             
             catch(NumberFormatException exception)	//wypisuje, gdy podamy np litery
@@ -534,6 +584,19 @@ public class MainFrame extends JFrame implements ActionListener
         }
 
 	}
+	
+	public class ClearData implements ActionListener	//Weronika Lis	
+	{
+		public void actionPerformed(ActionEvent e7) 
+        {	
+			frequencyField.setText("");
+			resultField.setText("");
+			vSourceSlider.setValue(0);
+			vObserverSlider.setValue(0);
+			lab1.setText("V oœrodka [m/s] - POWIETRZE");
+			lab2.setText("343");
+        }
+	}	
 	public MainFrame(GraphicsConfiguration arg0)
 	{
 		super(arg0);
