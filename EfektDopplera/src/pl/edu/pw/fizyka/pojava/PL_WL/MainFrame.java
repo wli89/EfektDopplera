@@ -50,7 +50,8 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 {
 	Image icon;
 
-	JPanel leftPanel, bottomPanel, centerPanel;
+	JPanel leftPanel, bottomPanel;
+	MainPanel centerPanel;
 	
 	//-------MenuItem-------
 	JMenuBar menuBar;
@@ -234,7 +235,7 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 		
 		//------------ Panel----------------
 		leftPanel = new JPanel();
-		centerPanel = new JPanel();
+		centerPanel = new MainPanel();
 		bottomPanel = new JPanel();
 		centerPanel.setBackground(Color.WHITE);
 		
@@ -242,23 +243,6 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 		this.add(centerPanel, BorderLayout.CENTER);
 		this.add(bottomPanel, BorderLayout.PAGE_END);
 		
-		//-------------Centralny panel----------
-	
-		/*ImagePanel obrazek = new ImagePanel();
-		//setSize(obrazek.getPreferredSize());
-		
-		
-		JPanel centerPanel = new JPanel();
-		JPanel leftPanel = new JPanel();
-		JPanel rightPanel = new JPanel();
-		
-		this.add(leftPanel, BorderLayout.PAGE_START);
-		this.add(centerPanel, BorderLayout.CENTER);
-		this.add(rightPanel, BorderLayout.PAGE_END);
-		
-		rightPanel.setBackground(Color.WHITE);
-		
-		centerPanel.add(obrazek);*/
 		
 		//------------ Lewy Panel----------------
 		leftPanel.setLayout(new GridLayout(11,1));
@@ -283,8 +267,7 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 		vObserverSlider.addChangeListener(e);
 		
 		Calculations e4 = new Calculations();
-		count.addActionListener(e4);
-		
+		count.addActionListener(e4);	
 			
 		vSourceSlider.setMajorTickSpacing(2);
 		vSourceSlider.setMinorTickSpacing(1);
@@ -295,7 +278,6 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 		vObserverSlider.setPaintTicks(true);
 		vObserverSlider.setPaintLabels(true);
 		
-		//lewy.add(predkosci);
 		leftPanel.add(vSourceLabel);
 		leftPanel.add(vSourceSlider);
 		leftPanel.add(vObserverLabel);
