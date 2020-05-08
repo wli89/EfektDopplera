@@ -46,7 +46,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 
-public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedziewicz
+public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedziewicz, Weronika Lis
 {
 	Image icon;
 
@@ -91,7 +91,7 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 	
 	JButton button;
 	
-	//----------Wykres
+	//---------Wykres
 	private XYSeries series1;
 	private XYSeriesCollection dataset1;
 	//private Random rand;
@@ -316,7 +316,7 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 	    reset.addActionListener(e7);
 
 		chart = new JButton("Wykres");
-		ShowChart e8 = new ShowChart();
+		Chart e8 = new Chart();
 		chart.addActionListener(e8);
 		
 		String sounds[]={"Brak dzwiêku", "Odg³os zrodl aa", "Odg³os zrodl bb",};        
@@ -500,11 +500,11 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
             {
                 number = Double.parseDouble(freq);
                 vMe = Double.parseDouble(medium);
-                resultField.setText(resultField.getText()+ "fs = " + number + "Hz");	
+               // resultField.setText(resultField.getText()+ "fs = " + number + "Hz");	
            
-                resultField.setText(resultField.getText()+ "; Vs = " + vSo + "m/s");	
+               // resultField.setText(resultField.getText()+ "; Vs = " + vSo + "m/s");	
                 
-                resultField.setText(resultField.getText()+ "; Vob = " + vOb + "m/s");
+               // resultField.setText(resultField.getText()+ "; Vob = " + vOb + "m/s");
                 
                 if(vOb == vSo )	
                 {
@@ -625,11 +625,11 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 			lab2.setText("343");
         }
 	}	
-	public class ShowChart implements ActionListener	//Weronika Lis	
+	public class Chart extends ShowChart implements ActionListener	//Weronika Lis	
 	{
 		public void actionPerformed(ActionEvent e8) 
         {
-			MainFrame frame = new MainFrame();
+			ShowChart frame = new ShowChart();
 			
 			series1 = new XYSeries("dane", true, true);
 			dataset1 = new XYSeriesCollection();
@@ -651,7 +651,6 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 				double y = Math.sin(x);
 				series1.addOrUpdate(x,y);
 			}
-			
 			chartPanel = new ChartPanel(lineGraph); 
 			frame.add(chartPanel);
 			frame.setVisible(true);
