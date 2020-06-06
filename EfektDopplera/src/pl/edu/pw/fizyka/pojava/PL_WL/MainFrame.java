@@ -7,6 +7,7 @@ import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
+import javax.swing.JEditorPane;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -15,7 +16,10 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
 import javax.swing.JSlider;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.KeyStroke;
@@ -72,7 +76,8 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 	JButton count;
 	
 	JLabel result;
-	JTextField resultField;
+	JEditorPane resultField;
+	JScrollPane scroll;
 	
 	JLabel empty;
 	JLabel lab1, lab2;
@@ -259,7 +264,8 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 		frequencyField = new JTextField();
 		count = new JButton("OBLICZ");
 		result = new JLabel("Wyniki obliczeñ:");
-		resultField = new JTextField();
+		resultField = new JEditorPane();
+		resultField.setEditable(false);
 		resultField.getScrollableTracksViewportHeight();
 		
 		ValueOfSlider e = new ValueOfSlider();
@@ -289,6 +295,7 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 		leftPanel.add(count);
 		leftPanel.add(result);
 		leftPanel.add(resultField);
+		//resultField.add(scroll);
 		
 		
 		//------------ Dolny Panel----------------
@@ -491,95 +498,95 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
                 if(vOb == vSo )	
                 {
                 	double fk = number;
-                	resultField.setText(resultField.getText()+ "; f ="+ fk + "Hz");
-                	resultField.setText(resultField.getText()+ "; T ="+ (1/fk) + "s");
-                	resultField.setText(resultField.getText()+ "; df ="+ (vMe/fk) + "m");
+                	resultField.setText(resultField.getText()+ " f ="+ fk + "Hz"+"\n");
+                	resultField.setText(resultField.getText()+ " T ="+ (1/fk) + "s"+"\n");
+                	resultField.setText(resultField.getText()+ " d³.fali ="+ (vMe/fk) + "m"+"\n");
                 }
                 else if(vOb == 0 & vSo>0)
                 {
                   	double v = vMe+vSo;
                   	double fk = number*(vMe/v);
-                	resultField.setText(resultField.getText()+ "; f = "+ fk + "Hz");
-                	resultField.setText(resultField.getText()+ "; T ="+ (1/fk) + "s");
-                	resultField.setText(resultField.getText()+ "; df ="+ (vMe/fk) + "m");
+                	resultField.setText(resultField.getText()+ " f = "+ fk + "Hz"+"\n");
+                	resultField.setText(resultField.getText()+ " T ="+ (1/fk) + "s"+"\n");
+                	resultField.setText(resultField.getText()+ " d³.fali ="+ (vMe/fk) + "m"+"\n");
                 }
                  else if(vOb == 0 & vSo<0)
                 {
                 	 double v = vMe-vSo;
                 	 double fk = number*(vMe/v);
-                	resultField.setText(resultField.getText()+ "; f ="+ fk + "Hz");
-                	resultField.setText(resultField.getText()+ "; T ="+ (1/fk) + "s");
-                	resultField.setText(resultField.getText()+ "; df ="+ (vMe/fk) + "m");
+                	resultField.setText(resultField.getText()+ " f ="+ fk + "Hz"+"\n");
+                	resultField.setText(resultField.getText()+ " T ="+ (1/fk) + "s"+"\n");
+                	resultField.setText(resultField.getText()+ " d³.fali ="+ (vMe/fk) + "m"+"\n");
                 }
                  else if(vOb<0 & vSo==0)
                 {
                  	double v = vMe-vOb;
                  	double fk = number*(v/vMe);
-                	resultField.setText(resultField.getText()+ "; f ="+ fk + "Hz");
-                	resultField.setText(resultField.getText()+ "; T ="+ (1/fk) + "s");
-                	resultField.setText(resultField.getText()+ "; df ="+ (vMe/fk) + "m");
+                	resultField.setText(resultField.getText()+ " f ="+ fk + "Hz"+"\n");
+                	resultField.setText(resultField.getText()+ " T ="+ (1/fk) + "s"+"\n");
+                	resultField.setText(resultField.getText()+ "d³.fali ="+ (vMe/fk) + "m"+"\n");
                 }
                 else if(vOb>0 & vSo==0)
                 {
                 	double v = vMe+vOb;
                 	double fk = number*(v/vMe);
-                	resultField.setText(resultField.getText()+ "; f ="+ fk + "Hz");
-                	resultField.setText(resultField.getText()+ "; T ="+ (1/fk) + "s");
-                	resultField.setText(resultField.getText()+ "; df ="+ (vMe/fk) + "m");
+                	resultField.setText(resultField.getText()+ " f ="+ fk + "Hz"+"\n");
+                	resultField.setText(resultField.getText()+ " T ="+ (1/fk) + "s"+"\n");
+                	resultField.setText(resultField.getText()+ "d³.fali ="+ (vMe/fk) + "m"+"\n");
                 }
                 else if(vOb>0 & vSo<0)//Obs i zr poruszaja sie w prawo; f'>f
                 {
                 	double v = vMe+vOb;
                 	double v1 = vMe-vSo;
                 	double fk = number*(v/v1);
-                	resultField.setText(resultField.getText()+ "; f ="+ fk + "Hz");
-                	resultField.setText(resultField.getText()+ "; T ="+ (1/fk) + "s");
-                	resultField.setText(resultField.getText()+ "; df ="+ (vMe/fk) + "m");
+                	resultField.setText(resultField.getText()+ " f ="+ fk + "Hz"+"\n");
+                	resultField.setText(resultField.getText()+ " T ="+ (1/fk) + "s"+"\n");
+                	resultField.setText(resultField.getText()+ " d³.fali ="+ (vMe/fk) + "m"+"\n");
                 }
                 else if(vOb<0 & vSo>0)
                 {
                 	double v = vMe-vOb;
                 	double v1 = vMe+vSo;
                 	double fk = number*(v/v1);
-                	resultField.setText(resultField.getText()+ "; f ="+ fk + "Hz");
-                	resultField.setText(resultField.getText()+ "; T ="+ (1/fk) + "s");
-                	resultField.setText(resultField.getText()+ "; df ="+ (vMe/fk) + "m");
+                	resultField.setText(resultField.getText()+ " f ="+ fk + "Hz"+"\n");
+                	resultField.setText(resultField.getText()+ " T ="+ (1/fk) + "s"+"\n");
+                	resultField.setText(resultField.getText()+ " d³.fali ="+ (vMe/fk) + "m"+"\n");
                 }
                 else if(vOb>0 & vSo>0 & vOb>vSo)
                 {
                 	double v = vMe+vOb;
                 	double v1 = vMe-vSo;
                 	double fk = number*(v/v1);
-                	resultField.setText(resultField.getText()+ "; f ="+ fk + "Hz");
-                	resultField.setText(resultField.getText()+ "; T ="+ (1/fk) + "s");
-                	resultField.setText(resultField.getText()+ "; df ="+ (vMe/fk) + "m");
+                	resultField.setText(resultField.getText()+ " f ="+ fk + "Hz"+"\n");
+                	resultField.setText(resultField.getText()+ " T ="+ (1/fk) + "s"+"\n");
+                	resultField.setText(resultField.getText()+ " d³.fali ="+ (vMe/fk) + "m"+"\n");
                 }
                 else if(vOb>0 & vSo>0 & vOb<vSo)
                 {
                 	double v = vMe-vOb;
                 	double v1 = vMe+vSo;
                 	double fk = number*(v/v1);
-                	resultField.setText(resultField.getText()+ "; f ="+ fk + "Hz");
-                	resultField.setText(resultField.getText()+ "; T ="+ (1/fk) + "s");
-                	resultField.setText(resultField.getText()+ "; df ="+ (vMe/fk) + "m");
+                	resultField.setText(resultField.getText()+ " f ="+ fk + "Hz"+"\n");
+                	resultField.setText(resultField.getText()+ " T ="+ (1/fk) + "s"+"\n");
+                	resultField.setText(resultField.getText()+ "d³.fali ="+ (vMe/fk) + "m"+"\n");
                 }
                 else if(vOb<0 & vSo<0 & vOb<vSo)
                 {
                 	double v = vMe+vOb;
                 	double v1 = vMe-vSo;
                 	double fk = number*(v/v1);
-                	resultField.setText(resultField.getText()+ "; f ="+ fk + "Hz");
-                	resultField.setText(resultField.getText()+ "; T ="+ (1/fk) + "s");
-                	resultField.setText(resultField.getText()+ "; df ="+ (vMe/fk) + "m");
+                	resultField.setText(resultField.getText()+ " f ="+ fk + "Hz"+"\n");
+                	resultField.setText(resultField.getText()+ " T ="+ (1/fk) + "s"+"\n");
+                	resultField.setText(resultField.getText()+ " d³.fali ="+ (vMe/fk) + "m"+"\n");
                 }
                 else if(vOb<0 & vSo<0 & vOb>vSo)
                 {
                 	double v = vMe-vOb;
                 	double v1 = vMe+vSo;
                 	double fk = number*(v/v1);
-                	resultField.setText(resultField.getText()+ "; f ="+ fk + "Hz");
-                	resultField.setText(resultField.getText()+ "; T ="+ (1/fk) + "s");
-                	resultField.setText(resultField.getText()+ "; df ="+ (vMe/fk) + "m");
+                	resultField.setText(resultField.getText()+ " f ="+ fk + "Hz"+"\n");
+                	resultField.setText(resultField.getText()+ " T ="+ (1/fk) + "s"+"\n");
+                	resultField.setText(resultField.getText()+ " d³.fali ="+ (vMe/fk) + "m"+"\n");
                 }
             }
             
@@ -666,6 +673,8 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 	public static void main(String[] args)
 	{
 		MainFrame frame = new MainFrame();
+		frame.setVisible(true);
+		ShowChart frame2 = new ShowChart();
 		frame.setVisible(true);
 	}
 
