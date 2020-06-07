@@ -52,6 +52,7 @@ import java.nio.charset.Charset;
 
 public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedziewicz, Weronika Lis
 {
+
 	Image icon;
 
 	JPanel leftPanel, bottomPanel;
@@ -626,7 +627,7 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 			//rand = new Random();
 			
 			lineGraph = ChartFactory.createXYLineChart(
-					"Tytu³ wykresu", "X", "Y",
+					"Tytu³ wykresu", "D³ugoœæ fali", "Y",
 					dataset1,	//dane
 					PlotOrientation.VERTICAL,	//orientacja
 					true,	//legenda
