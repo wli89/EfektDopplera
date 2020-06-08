@@ -1,7 +1,15 @@
 package pl.edu.pw.fizyka.pojava.PL_WL;
 
 
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.DataLine;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
@@ -16,26 +24,23 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.KeyStroke;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GraphicsConfiguration;
 import java.awt.GridLayout;
 import java.awt.HeadlessException;
@@ -58,52 +63,47 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 	JPanel leftPanel, bottomPanel;
 	MainPanel centerPanel;
 	
-	//-------MenuItem-------
+	//-------Menu----
 	JMenuBar menuBar;
 	JMenu help, menu;
 	JMenuItem medium, water, air, carbon;
 	JMenuItem save, background, exit;
 	JMenuItem info, language, eng, esp, pol;
 	
-	//------Panel lewy------
+	//------PanelLewy----
 	JLabel vSourceLabel;
 	JSlider vSourceSlider;
 	
 	JLabel vObserverLabel;
 	JSlider vObserverSlider;
 	
-	JLabel frequency;
+	JLabel MediumLabel, MediumValueLabel;
+	
+	JLabel frequencyLabel;
 	JTextField frequencyField;
-	JButton count;
+	JButton countButton;
 	
-	JLabel result;
+	JLabel resultLabel;
 	JEditorPane resultField;
-	JScrollPane scroll;
-	
-	JLabel empty;
-	JLabel lab1, lab2;
-	JLabel lab;
+	JScrollPane  scrollPane;
 	
 	static final int MIN = -10;
 	static final int MAX = 10;
 	static final int INIT = 0;
 	
-	static int x;
-	static int n=1;
+	//static int x;
+	//static int nn = 1;
 	
-	//-----Panel dolny-----
-	JButton reset, przycisk, chart;
-	JComboBox cb;
+	//-----PanelDolny----
+	JButton resetButton, chartButton;
+	JComboBox sound;
 	JToggleButton stopStart;
 	
-	JButton button;
-	
-	//---------Wykres
-	private XYSeries series1;
-	private XYSeriesCollection dataset1;
-	//private Random rand;
-	JFreeChart lineGraph;
-	private ChartPanel chartPanel;
+	//----Dzwiek----
+	String audioFilePath = "";
+	Clip audioClip = null;
+	File audioFile = null;
+	AudioInputStream audioStream = null;
 	
 	//---------------------------------------------------
 	public MainFrame() throws HeadlessException
@@ -113,12 +113,12 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 		this.setTitle("Efekt Dopplera");
 		
 		
-		//-----------Dodawnie ikony--------------------------
+		//-----------DodawnieIkony----
 		icon = Toolkit.getDefaultToolkit().getImage("icon.png");    
 		this.setIconImage(icon); 
 		
 		
-		//------------Ustawienie okna na úrodku---------------
+		//------------UstawienieOknaNaårodku----
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
 		
@@ -246,6 +246,7 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 		centerPanel.setBackground(Color.WHITE);
 		
 		this.add(leftPanel, BorderLayout.LINE_START);
+		leftPanel.setPreferredSize(new Dimension(250, 1050));
 		this.add(centerPanel, BorderLayout.CENTER);
 		this.add(bottomPanel, BorderLayout.PAGE_END);
 		
@@ -253,28 +254,30 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 		//------------ Lewy Panel----------------
 		leftPanel.setLayout(new GridLayout(11,1));
 		leftPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
+	
 		
-		lab1 = new JLabel("V oúrodek [m/s] - POWIETRZE");
-		lab2 = new JLabel("343");
+		MediumLabel = new JLabel("V oúrodek [m/s] - POWIETRZE");
+		MediumValueLabel = new JLabel("343");
 		
 		vSourceLabel = new JLabel("PrÍdkoúÊ èrÛd≥a [m/s]:   0 ");   
 		vSourceSlider = new JSlider(JSlider.HORIZONTAL, MIN, MAX, INIT);
 		vObserverLabel = new JLabel("PrÍdkoúÊ Obserwatora [m/s]:   0 ");
 		vObserverSlider = new JSlider(JSlider.HORIZONTAL, MIN, MAX, INIT);
-		frequency = new JLabel("CzÍstotliwoúÊ [Hz]:");
+		frequencyLabel = new JLabel("CzÍstotliwoúÊ [Hz]:");
 		frequencyField = new JTextField();
-		count = new JButton("OBLICZ");
-		result = new JLabel("Wyniki obliczeÒ:");
+		countButton = new JButton("OBLICZ");
+		resultLabel = new JLabel("Wyniki obliczeÒ:");
 		resultField = new JEditorPane();
+		resultField.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		resultField.setEditable(false);
-		resultField.getScrollableTracksViewportHeight();
+		scrollPane = new JScrollPane();
 		
 		ValueOfSlider e = new ValueOfSlider();
 		vSourceSlider.addChangeListener(e);
 		vObserverSlider.addChangeListener(e);
 		
 		Calculations e4 = new Calculations();
-		count.addActionListener(e4);	
+		countButton.addActionListener(e4);	
 			
 		vSourceSlider.setMajorTickSpacing(2);
 		vSourceSlider.setMinorTickSpacing(1);
@@ -289,30 +292,56 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 		leftPanel.add(vSourceSlider);
 		leftPanel.add(vObserverLabel);
 		leftPanel.add(vObserverSlider);
-		leftPanel.add(lab1);
-		leftPanel.add(lab2);
-		leftPanel.add(frequency);
+		leftPanel.add(MediumLabel);
+		leftPanel.add(MediumValueLabel);
+		leftPanel.add(frequencyLabel);
 		leftPanel.add(frequencyField);
-		leftPanel.add(count);
-		leftPanel.add(result);
-		leftPanel.add(resultField);
-		//resultField.add(scroll);
+		leftPanel.add(countButton);
+		leftPanel.add(resultLabel);
+		leftPanel.add(scrollPane);
+		scrollPane.setViewportView(resultField);
 		
-		
+	
 		//------------ Dolny Panel----------------
-		//dolny.setLayout(new BoxLayout(dolny, BoxLayout.X_AXIS));
-		reset = new JButton("Zeruj dane");
-	    ClearData e7 = new ClearData();
-	    reset.addActionListener(e7);
-
-		chart = new JButton("Wykres");
-		Chart e8 = new Chart();
-		chart.addActionListener(e8);
+		bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.X_AXIS));
+		resetButton = new JButton("Zeruj dane");
 		
-		String sounds[]={"Brak dzwiÍku", "Odg≥os zrodl aa", "Odg≥os zrodl bb",};        
-	    cb = new JComboBox(sounds);    
+	    ClearData e7 = new ClearData();
+	    resetButton.addActionListener(e7);
+
+		chartButton = new JButton("Wykres");
+		Chart e8 = new Chart();
+		chartButton.addActionListener(e8);
+		
+		String sounds[]={"Brak dzwiÍku", "1) Odg≥os zrodla ", "2) Odg≥os zrodl ",};        
+	    sound = new JComboBox(sounds);
 	    
-	    stopStart = new JToggleButton("START");
+	    sound.addActionListener(new ActionListener() 
+	    {
+	        public void actionPerformed(ActionEvent e)
+	        {
+	          
+	          if (sound.getSelectedItem().equals("1) Odg≥os zrodla ")) 
+	          {
+	        	  		
+	  		    	play("./resources/1-welcome.wav");	//wstawiÊ jakiú dzwiÍk zamiast tego
+	  		    	audioClip.start();
+	        }
+	          if (sound.getSelectedItem().equals("Brak dzwiÍku")) 
+	          {
+	  		    	audioClip.stop();
+	          }
+	          
+	          if (sound.getSelectedItem().equals("2) Odg≥os zrodl ")) 
+	          {
+	        	  	//play("./resources/1-welcome.wav");	//wstawiÊ jakiú INNY dzwiÍk zamiast tego
+	  		    	//audioClip.start();
+	          }
+	        }
+	      });
+	    
+	    
+	    stopStart = new JToggleButton("START ANIMACJI");
 	    stopStart.addActionListener(this);
 	    
 	    stopStart.addActionListener(new ActionListener()
@@ -321,16 +350,16 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 			public void actionPerformed(ActionEvent arg0) 
 			{
 				 if (stopStart.isSelected())  
-			            stopStart.setText("STOP ");  
+			            stopStart.setText("STOP ANIMACJI");  
 			        else  
 			        	
-			        stopStart.setText("START");
+			        stopStart.setText("START ANIMACJI");
 			}			
 		});
 		 
-		bottomPanel.add(reset);
-		bottomPanel.add(chart);
-		bottomPanel.add(cb);   
+		bottomPanel.add(resetButton);
+		bottomPanel.add(chartButton);
+		bottomPanel.add(sound);   
 		bottomPanel.add(stopStart);
 		
 		//------------------------------
@@ -342,18 +371,18 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
         {	
 			if(e5.getActionCommand().equals("WODA"))
 			{
-				lab1.setText("V w oúrodku [m/s] - WODA");
-				lab2.setText("1490");
+				MediumLabel.setText("V w oúrodku [m/s] - WODA");
+				MediumValueLabel.setText("1490");
 			}
 			else if(e5.getActionCommand().equals("POWIETRZE"))
 			{
-				lab1.setText("V w oúrodku [m/s] - POWIETRZE");
-				lab2.setText("v343");
+				MediumLabel.setText("V w oúrodku [m/s] - POWIETRZE");
+				MediumValueLabel.setText("v343");
 			}
 			else if(e5.getActionCommand().equals("DWUTLENEK W GLA"))
 			{
-				lab1.setText("V w oúrodku [m/s]  - DWUTLENEK W GLA");
-				lab2.setText("259");
+				MediumLabel.setText("V w oúrodku [m/s]  - DWUTLENEK W GLA");
+				MediumValueLabel.setText("259");
 			}
 			
         }
@@ -406,12 +435,14 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 			language.setText("Choose language");
 			vSourceLabel.setText("Velocity of source");
 			vObserverLabel.setText("Velocity of observer");
-			frequency.setText("Frequency");
-			count.setText("Count");
-			result.setText("Result");
-			reset.setText("Reset");
-			chart.setText("Chart");
-			lab1.setText("V in medium [m/s] - WATER");
+			frequencyLabel.setText("Frequency");
+			countButton.setText("Count");
+			resultLabel.setText("Result");
+			resetButton.setText("Reset");
+			chartButton.setText("Chart");
+			MediumLabel.setText("V in medium [m/s] - WATER");
+			String sounds[]={"No sound", "1) Source sound ", "2) Source sound ",};        
+		    
 			
 		}
 	}
@@ -430,12 +461,12 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 			language.setText("Elgir lengua");
 			vSourceLabel.setText("Velocidad de fuente");
 			vObserverLabel.setText("Velocidad del observador");
-			frequency.setText("Frecuencia");
-			count.setText("Calcular");
-			result.setText("Resultar");
-			reset.setText("Reiniciar");
-			chart.setText("Grafico");
-			lab1.setText("V en resort [m/s] - AQUA");
+			frequencyLabel.setText("Frecuencia");
+			countButton.setText("Calcular");
+			resultLabel.setText("Resultar");
+			resetButton.setText("Reiniciar");
+			chartButton.setText("Grafico");
+			MediumLabel.setText("V en resort [m/s] - AQUA");
 		}
 	}
 	public class ChangeToPolish implements ActionListener	//Weronika Lis
@@ -453,12 +484,12 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 			language.setText("Wybierz jÍzyk");
 			vSourceLabel.setText("PrÍdkoúÊ zrÛd≥π");
 			vObserverLabel.setText("PrÍdkoúÊ obserwatora");
-			frequency.setText("CzÍstotliwoúÊ");
-			count.setText("Oblicz");
-			result.setText("Wynik");
-			reset.setText("Zeruj");
-			chart.setText("Wykres");
-			lab1.setText("V w oúrodku [m/s] - WODA");
+			frequencyLabel.setText("CzÍstotliwoúÊ");
+			countButton.setText("Oblicz");
+			resultLabel.setText("Wynik");
+			resetButton.setText("Zeruj");
+			chartButton.setText("Wykres");
+			MediumLabel.setText("V w oúrodku [m/s] - WODA");
 		}
 	}
 	
@@ -471,31 +502,25 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 			
 			int value2 = vObserverSlider.getValue();
 			vObserverLabel.setText("PrÍdkoúÊ Obserwatowa [m/s]:   " + value2);
-			
 		}
 	}
 	
 	public class Calculations implements ActionListener	//Weronika Lis
 	{
-		public void actionPerformed(ActionEvent e) //wypisywanie liczb
+		public void actionPerformed(ActionEvent e) 
         {	
             double number, vMe;
             String freq = frequencyField.getText();
-            String medium = lab2.getText();
+            String medium = MediumValueLabel.getText();
             int vSo = vSourceSlider.getValue();
             int vOb = vObserverSlider.getValue();
-           
-            
+ 
             try
             {
                 number = Double.parseDouble(freq);
                 vMe = Double.parseDouble(medium);
-               // resultField.setText(resultField.getText()+ "fs = " + number + "Hz");	
-           
-               // resultField.setText(resultField.getText()+ "; Vs = " + vSo + "m/s");	
-                
-               // resultField.setText(resultField.getText()+ "; Vob = " + vOb + "m/s");
-                
+             
+                //rozne przypadki poruszania sie, 
                 if(vOb == vSo )	
                 {
                 	double fk = number;
@@ -591,7 +616,7 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
                 }
             }
             
-            catch(NumberFormatException exception)	//wypisuje, gdy podamy np litery
+            catch(NumberFormatException exception)	
             {
             	 JOptionPane.showMessageDialog(null, "CzÍstotlowoúÊ musi byÊ liczbπ. "
                  		+ " Liczbe u≥amkowπ wprowadzamy za pomocπ KROPKI.",
@@ -611,52 +636,39 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 			resultField.setText("");
 			vSourceSlider.setValue(0);
 			vObserverSlider.setValue(0);
-			lab1.setText("V oúrodka [m/s] - POWIETRZE");
-			lab2.setText("343");
+			MediumLabel.setText("V oúrodka [m/s] - POWIETRZE");
+			MediumValueLabel.setText("343");
         }
 	}	
-	public class Chart extends ShowChart implements ActionListener	//Weronika Lis	
-	{
-		public void actionPerformed(ActionEvent e8) 
+
+    void play(String audioFilePath) //Weronika Lis
+    {
+        try 
         {
-			ShowChart frame = new ShowChart();
-			
-			series1 = new XYSeries("dane", true, true);
-			dataset1 = new XYSeriesCollection();
-			dataset1.addSeries(series1);
-			//rand = new Random();
-			
-			lineGraph = ChartFactory.createXYLineChart(
-					"Tytu≥ wykresu", "D≥ugoúÊ fali", "Y",
-					dataset1,	//dane
-					PlotOrientation.VERTICAL,	//orientacja
-					true,	//legenda
-					true,	//wskazowki
-					false);
-			//series1.clear();	//uzuwanie poprzedniej serii  
-			lineGraph.setTitle("Funkcja sinus");
-			for(int i = 0; i < 100; i++)
-			{
-				double x = (i)/10.0;
-				double y = Math.sin(x);
-				series1.addOrUpdate(x,y);
-			}
-			chartPanel = new ChartPanel(lineGraph); 
-			frame.add(chartPanel);
-			frame.setVisible(true);
+            audioFile = new File(audioFilePath);
+            audioStream = AudioSystem.getAudioInputStream(audioFile);
+            AudioFormat format = audioStream.getFormat();
+            DataLine.Info info = new DataLine.Info(Clip.class, format);
+            audioClip = (Clip) AudioSystem.getLine(info);
+            audioClip.open(audioStream);
         }
-
-		public void setVisible(boolean b) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		public void setSize(int i, int j) {
-			// TODO Auto-generated method stub
-			
-		}
-		
-	}
+        catch (UnsupportedAudioFileException ex)
+        {
+            System.out.println("The specified audio file is not supported.");
+            ex.printStackTrace();
+        } 
+        catch (LineUnavailableException ex) 
+        {
+            System.out.println("Audio line for playing back is unavailable.");
+            ex.printStackTrace();
+        } 
+        catch (IOException e1) 
+        {
+            System.out.println("Error playing the audio file.");
+			e1.printStackTrace();
+		} 
+      }
+	
 	public MainFrame(GraphicsConfiguration arg0)
 	{
 		super(arg0);
@@ -675,16 +687,10 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 	{
 		MainFrame frame = new MainFrame();
 		frame.setVisible(true);
-		ShowChart frame2 = new ShowChart();
-		frame.setVisible(true);
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent arg0)
-	{
-		// TODO Auto-generated method stub
-		
-	}
+	public void actionPerformed(ActionEvent arg0){}
 
 }
 

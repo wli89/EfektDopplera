@@ -23,10 +23,8 @@ public class MainPanel extends JPanel implements ActionListener 	//Piotr Lebiedz
 	private int[] circleX = new int [10];
 	private int[] circleY = new int [10];
 	private int[] circleR = new int [10];
-	int licznik = 0;
+	int counter = 0;
 	
-	
-
 	void uruchomAnimacje()
 	{
 		tm = new Timer(10, this);
@@ -48,7 +46,7 @@ public class MainPanel extends JPanel implements ActionListener 	//Piotr Lebiedz
         		time = time + 1;
         		if (time % 100 == 0)
         		{
-        			licznik++;
+        			counter++;
         		}
         		
     			System.out.println(circleX[0]);
@@ -110,6 +108,7 @@ public class MainPanel extends JPanel implements ActionListener 	//Piotr Lebiedz
 	
 	public MainPanel()
 	{
+		
 		JButton b1 = new JButton("Animacja start");
 		b1.addActionListener(listener1);
 		add(b1);
