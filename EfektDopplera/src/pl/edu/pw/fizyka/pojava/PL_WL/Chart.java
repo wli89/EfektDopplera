@@ -60,13 +60,13 @@ public class Chart extends JFrame implements ActionListener	//Weronika Lis
 				false);
 		series1.clear();	//uzuwanie poprzedniej serii  
 		
-		/*lineGraph.setTitle("Funkcja sinus");
+		lineGraph.setTitle("Funkcja sinus");
 		for(int i = 0; i < 100; i++)
 		{
 			double x = (i)/10.0;
 			double y = Math.sin(x);
 			series1.addOrUpdate(x,y);
-		}*/
+		}
 		
 		chartPanel = new ChartPanel(lineGraph);
 		centralPanel.add(chartPanel);
