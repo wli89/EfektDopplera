@@ -366,7 +366,7 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 			@Override
 			public void actionPerformed(ActionEvent arg0) 
 			{
-				if(!centerPanel.running) {
+				if(!centerPanel.running && !stopStart.isSelected()) {
 					centerPanel.reset();
 				}
 			}			
@@ -536,10 +536,10 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 		public void stateChanged(ChangeEvent e)
 		{
 			int value = vSourceSlider.getValue();
-			vSourceLabel.setText("PrÍdkoúÊ èrÛd≥a [m/s]:   " + value);
+			vSourceLabel.setText("PrÍdkoúÊ èrÛd≥a:   " + value);
 			
 			int value2 = vObserverSlider.getValue();
-			vObserverLabel.setText("PrÍdkoúÊ Obserwatowa [m/s]:   " + value2);
+			vObserverLabel.setText("PrÍdkoúÊ Obserwatora:   " + value2);
 		}
 	}
 	
