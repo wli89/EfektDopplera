@@ -29,6 +29,7 @@ public class MainPanel extends JPanel implements ActionListener 	//Piotr Lebiedz
 	
 	void uruchomAnimacje()
 	{
+		
 		tm = new Timer(10, this);
 	  	tm.addActionListener(new ActionListener() 
 	  	{
@@ -102,5 +103,6 @@ public class MainPanel extends JPanel implements ActionListener 	//Piotr Lebiedz
 		// TODO Auto-generated method stub
 		
 	}
+
 
 }

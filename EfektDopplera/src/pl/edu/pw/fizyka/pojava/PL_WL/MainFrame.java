@@ -1,6 +1,5 @@
 package pl.edu.pw.fizyka.pojava.PL_WL;
 
-
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -32,11 +31,6 @@ import javax.swing.KeyStroke;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.jfree.chart.ChartPanel;
-import org.jfree.chart.JFreeChart;
-import org.jfree.data.xy.XYSeries;
-import org.jfree.data.xy.XYSeriesCollection;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -57,7 +51,6 @@ import java.nio.charset.Charset;
 
 public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedziewicz, Weronika Lis
 {
-
 	Image icon;
 
 	JPanel leftPanel, bottomPanel;
@@ -108,7 +101,7 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 	//---------------------------------------------------
 	public MainFrame() throws HeadlessException
 	{
-		this.setSize(1050,700);
+		this.setSize(1050,650);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setTitle("Efekt Dopplera");
 		
@@ -174,10 +167,7 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 	             	new ActionListener() 
 	           		{
 	               		@Override
-	               		public void actionPerformed(ActionEvent e) 
-	               		{
-	                    
-	               		}
+	               		public void actionPerformed(ActionEvent e) {}
 	           		});
 	            
 	         dialog.setVisible(true);
@@ -211,7 +201,13 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 			public void actionPerformed(ActionEvent arg0) 
 			{
 				JOptionPane.showMessageDialog(null,
-							  "Symulacja Efektu Dopplera", "Informacje",JOptionPane.QUESTION_MESSAGE);
+							  " SYMULACJA EFEKTU DOPPLERA\n "
+							  + "Zjawisko obserwowane dla fal, polega na\n"
+							  + " powstawaniu rÛønicy czÍstotliwoúci fali\n"
+							  + " wysy≥anej przez zrÛd≥o, ktÛre siÍ porusza\n"
+							  + " oraz czÍstotliwoúci fali rejestrowanej przez\n"
+							  + " obserwatora.", 
+							  		"Co to za program?",JOptionPane.QUESTION_MESSAGE);
 						
 			}
 					
@@ -219,7 +215,7 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 		help.add(info);
 		menuBar.add(help);
 		
-		//------------ Zmiana jezyka z menu----------------
+		//------------ ZmianaJezykaZmenu----------------
 		language = new JMenu("Wybierz jÍzyk");
 		help.add(language);
 		
@@ -239,7 +235,7 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 		pol.addActionListener(e3);
 			
 		
-		//------------ Panel----------------
+		//------------ Panel----
 		leftPanel = new JPanel();
 		centerPanel = new MainPanel();
 		bottomPanel = new JPanel();
@@ -251,18 +247,16 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 		this.add(bottomPanel, BorderLayout.PAGE_END);
 		
 		
-		//------------ Lewy Panel----------------
+		//------------ LewyPanel----
 		leftPanel.setLayout(new GridLayout(11,1));
 		leftPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
-	
-		
-		MediumLabel = new JLabel("V oúrodek [m/s] - POWIETRZE");
-		MediumValueLabel = new JLabel("343");
-		
+
 		vSourceLabel = new JLabel("PrÍdkoúÊ èrÛd≥a [m/s]:   0 ");   
 		vSourceSlider = new JSlider(JSlider.HORIZONTAL, MIN, MAX, INIT);
 		vObserverLabel = new JLabel("PrÍdkoúÊ Obserwatora [m/s]:   0 ");
 		vObserverSlider = new JSlider(JSlider.HORIZONTAL, MIN, MAX, INIT);
+		MediumLabel = new JLabel("PrÍd. w oúrodku[m/s] - POWIETRZE");
+		MediumValueLabel = new JLabel("343");
 		frequencyLabel = new JLabel("CzÍstotliwoúÊ [Hz]:");
 		frequencyField = new JTextField();
 		countButton = new JButton("OBLICZ");
@@ -379,17 +373,17 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
         {	
 			if(e5.getActionCommand().equals("WODA"))
 			{
-				MediumLabel.setText("V w oúrodku [m/s] - WODA");
+				MediumLabel.setText("PrÍd. w oúrodku[m/s] - WODA");
 				MediumValueLabel.setText("1490");
 			}
 			else if(e5.getActionCommand().equals("POWIETRZE"))
 			{
-				MediumLabel.setText("V w oúrodku [m/s] - POWIETRZE");
-				MediumValueLabel.setText("v343");
+				MediumLabel.setText("PrÍd. w oúrodku[m/s] - POWIETRZE");
+				MediumValueLabel.setText("343");
 			}
 			else if(e5.getActionCommand().equals("DWUTLENEK W GLA"))
 			{
-				MediumLabel.setText("V w oúrodku [m/s]  - DWUTLENEK W GLA");
+				MediumLabel.setText("PrÍd. w oúrodku[m/s] - DWUTLENEK W GLA");
 				MediumValueLabel.setText("259");
 			}
 			
@@ -443,6 +437,7 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 			language.setText("Choose language");
 			vSourceLabel.setText("Velocity of source");
 			vObserverLabel.setText("Velocity of observer");
+			MediumLabel.setText("Velo. of medium[m/s] - AIR");
 			frequencyLabel.setText("Frequency");
 			countButton.setText("Count");
 			resultLabel.setText("Result");
@@ -467,8 +462,10 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 			exit.setText("Salia");
 			info.setText("Informacion");
 			language.setText("Elgir lengua");
+			
 			vSourceLabel.setText("Velocidad de fuente");
 			vObserverLabel.setText("Velocidad del observador");
+			MediumLabel.setText("Velo. of medium[m/s] - AIR");
 			frequencyLabel.setText("Frecuencia");
 			countButton.setText("Calcular");
 			resultLabel.setText("Resultar");
@@ -492,6 +489,7 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 			language.setText("Wybierz jÍzyk");
 			vSourceLabel.setText("PrÍdkoúÊ zrÛd≥π");
 			vObserverLabel.setText("PrÍdkoúÊ obserwatora");
+			MediumLabel.setText("PrÍd. w oúrodku[m/s] - POWIETRZE");
 			frequencyLabel.setText("CzÍstotliwoúÊ");
 			countButton.setText("Oblicz");
 			resultLabel.setText("Wynik");
@@ -646,6 +644,7 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 			vObserverSlider.setValue(0);
 			MediumLabel.setText("V oúrodka [m/s] - POWIETRZE");
 			MediumValueLabel.setText("343");
+			//centerPanel.clear();
         }
 	}	
 
