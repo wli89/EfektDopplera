@@ -15,15 +15,17 @@ public class MainPanel extends JPanel implements ActionListener 	//Piotr Lebiedz
 
 	Timer tm;
 	int time = 0;
-	int x = 200, velX = 1;
+	int xRedObject = 200, velX = 1;
 	int velR = 4;
-	JButton start;
 	boolean running;
 	
-	private int[] circleX = new int [10];
-	private int[] circleY = new int [10];
-	private int[] circleR = new int [10];
+	private int[] circleX = new int [1000];
+	private int[] circleY = new int [1000];
+	private int[] circleR = new int [1000];
 	int counter = 0;
+	
+	int frequency = 10;
+	boolean changeFrequency = true;
 	
 	void uruchomAnimacje()
 	{
@@ -33,9 +35,18 @@ public class MainPanel extends JPanel implements ActionListener 	//Piotr Lebiedz
         	@Override
         	public void actionPerformed(ActionEvent e)
         	{
-        		x = x+velX;     		
+        		if (!changeFrequency) {
+        			
+        		} else {
+        			for (int f = 1; f <1000; f++) {
+        				circleX[f] = circleX[f - 1] + frequency;
+        			}
+        			changeFrequency = false;
+        		}
         		
-        		for (int i = 0; i < 1; i++) 
+        		xRedObject = xRedObject+velX;     		
+        		
+        		for (int i = 0; i < counter + 1; i++) 
         		{    	
             		circleX[i] = circleX[i] - velR/2;
             		circleY[i] = circleY[i] - velR/2;
@@ -44,7 +55,7 @@ public class MainPanel extends JPanel implements ActionListener 	//Piotr Lebiedz
         		
         		
         		time = time + 1;
-        		if (time % 100 == 0)
+        		if (time % frequency == 0)
         		{
         			counter++;
         		}
@@ -53,7 +64,7 @@ public class MainPanel extends JPanel implements ActionListener 	//Piotr Lebiedz
 
         		repaint();
         		
-        		if (x > 803)
+        		if (xRedObject > 778)
         		{
         			tm.stop();
         		}
@@ -66,17 +77,17 @@ public class MainPanel extends JPanel implements ActionListener 	//Piotr Lebiedz
 	public void paintComponent(Graphics g)
 	{
 		super.paintComponent(g);
-		
+		g.setColor(Color.BLUE);
+		g.fillRect(600 - 5, 300 - 5, 10, 10);
 		
 		g.setColor(Color.RED);
-		g.fillRect(x, 300, 10, 10);
+		g.fillRect(xRedObject - 5, 300 - 5, 10, 10);
 		//g.drawOval(circleXold, circleYold, r, r);
-		for (int i = 0; i < 1; i++) {
+		for (int i = 0; i < counter +1; i++) {
 			g.drawOval(circleX[i], circleY[i], circleR[i], circleR[i]);
 		}
 		
-		g.setColor(Color.BLUE);
-		g.fillRect(600, 300, 10, 10);
+
 	}
 	
 	public MainPanel()
