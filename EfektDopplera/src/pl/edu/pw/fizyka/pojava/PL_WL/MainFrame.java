@@ -80,8 +80,8 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 	JEditorPane resultField;
 	JScrollPane  scrollPane;
 	
-	static final int MIN = -10;
-	static final int MAX = 10;
+	static final int MIN = -5;
+	static final int MAX = 5;
 	static final int INIT = 0;
 	
 	//static int x;
@@ -91,6 +91,7 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 	JButton resetButton, chartButton;
 	JComboBox sound;
 	JToggleButton stopStart;
+	JButton resetAnimation;
 	
 	//----Dzwiek----
 	String audioFilePath = "";
@@ -250,9 +251,9 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 		leftPanel.setLayout(new GridLayout(11,1));
 		leftPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
 
-		vSourceLabel = new JLabel("PrÍdkoúÊ èrÛd≥a [m/s]:   0 ");   
+		vSourceLabel = new JLabel("PrÍdkoúÊ èrÛd≥a:   0 ");   
 		vSourceSlider = new JSlider(JSlider.HORIZONTAL, MIN, MAX, INIT);
-		vObserverLabel = new JLabel("PrÍdkoúÊ Obserwatora [m/s]:   0 ");
+		vObserverLabel = new JLabel("PrÍdkoúÊ Obserwatora:   0 ");
 		vObserverSlider = new JSlider(JSlider.HORIZONTAL, MIN, MAX, INIT);
 		MediumLabel = new JLabel("PrÍd. w oúrodku[m/s] - POWIETRZE");
 		MediumValueLabel = new JLabel("343");
@@ -272,12 +273,12 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 		Calculations e4 = new Calculations();
 		countButton.addActionListener(e4);	
 			
-		vSourceSlider.setMajorTickSpacing(2);
-		vSourceSlider.setMinorTickSpacing(1);
+		vSourceSlider.setMajorTickSpacing(1);
+		vSourceSlider.setMinorTickSpacing(0);
 		vSourceSlider.setPaintTicks(true);
 		vSourceSlider.setPaintLabels(true);
-		vObserverSlider.setMajorTickSpacing(2);
-		vObserverSlider.setMinorTickSpacing(1);
+		vObserverSlider.setMajorTickSpacing(1);
+		vObserverSlider.setMinorTickSpacing(0);
 		vObserverSlider.setPaintTicks(true);
 		vObserverSlider.setPaintLabels(true);
 		
@@ -357,11 +358,42 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 					
 			}			
 		});
+	    
+	    resetAnimation = new JButton("Reset");
+	    resetAnimation.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent arg0) 
+			{
+				if(!centerPanel.running) {
+					centerPanel.reset();
+				}
+			}			
+		});
 		 
 		bottomPanel.add(resetButton);
 		bottomPanel.add(chartButton);
 		bottomPanel.add(sound);   
 		bottomPanel.add(stopStart);
+		bottomPanel.add(resetAnimation);
+		
+		vSourceSlider.addChangeListener(new ChangeListener()
+		{
+			@Override
+			public void stateChanged(ChangeEvent arg0) {
+				centerPanel.velX = vSourceSlider.getValue();	
+			}
+					
+		});
+		
+		vObserverSlider.addChangeListener(new ChangeListener()
+		{
+			@Override
+			public void stateChanged(ChangeEvent arg0) {
+				centerPanel.velXBlue = vObserverSlider.getValue();
+			}
+					
+		});
 		
 		//------------------------------
 		
@@ -624,7 +656,8 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 			vObserverSlider.setValue(0);
 			MediumLabel.setText("V oúrodka [m/s] - POWIETRZE");
 			MediumValueLabel.setText("343");
-			//centerPanel.clear();
+			
+			
         }
 	}	
 

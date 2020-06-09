@@ -14,8 +14,8 @@ public class MainPanel extends JPanel implements ActionListener 	//Piotr Lebiedz
 
 	Timer tm;
 	int time = 0;
-	int xRedObject = 200, velX = 3;
-	int xBlueObject = 600, velY = 0;
+	int xRedObject = 200, velX = 0;
+	int xBlueObject = 600, velXBlue = 0;
 	int velR = 6;
 	boolean running;
 	
@@ -24,7 +24,7 @@ public class MainPanel extends JPanel implements ActionListener 	//Piotr Lebiedz
 	private int[] circleR = new int [1000];
 	int counter = 0;
 	
-	int frequency = 10;
+	int frequency = 20;
 	boolean changeFrequency = true;
 	
 	void uruchomAnimacje()
@@ -45,7 +45,7 @@ public class MainPanel extends JPanel implements ActionListener 	//Piotr Lebiedz
         			changeFrequency = false;
         		}
         		
-        		xRedObject = xRedObject+velX;     		
+        		xRedObject = xRedObject + velX;     		
         		
         		for (int i = 0; i < counter + 1; i++) 
         		{    	
@@ -54,7 +54,7 @@ public class MainPanel extends JPanel implements ActionListener 	//Piotr Lebiedz
             		circleR[i] = circleR[i] + velR;
         		}
         		
-        		xBlueObject = xBlueObject - velY;     		
+        		xBlueObject = xBlueObject + velXBlue;     		
         		
         		time = time + 1;
         		if (time % frequency == 0)
@@ -66,9 +66,10 @@ public class MainPanel extends JPanel implements ActionListener 	//Piotr Lebiedz
 
         		repaint();
         		
-        		if (xRedObject > 778)
+        		if (xRedObject > 778 || xRedObject < 6 || xBlueObject > 778 || xBlueObject < 7)
         		{
         			tm.stop();
+        			running = false;
         		}
         	}
     	});	
@@ -89,6 +90,24 @@ public class MainPanel extends JPanel implements ActionListener 	//Piotr Lebiedz
 		}
 		
 
+	}
+	
+	public void reset() {
+		Arrays.fill(circleX, 200);
+		Arrays.fill(circleY, 300);
+		Arrays.fill(circleR, 0);
+		tm = null;
+		time = 0;
+		xRedObject = 200;
+		velX = 0;
+		xBlueObject = 600;
+		velXBlue = 0;
+		velR = 6;
+		running = false;
+		counter = 0;
+		frequency = 20;
+		changeFrequency = true;
+		repaint();
 	}
 	
 	public MainPanel()
