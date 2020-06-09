@@ -82,7 +82,6 @@ public class MainPanel extends JPanel implements ActionListener 	//Piotr Lebiedz
 		
 		g.setColor(Color.RED);
 		g.fillRect(xRedObject - 5, 300 - 5, 10, 10);
-		//g.drawOval(circleXold, circleYold, r, r);
 		for (int i = 0; i < counter +1; i++) {
 			g.drawOval(circleX[i], circleY[i], circleR[i], circleR[i]);
 		}
