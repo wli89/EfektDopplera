@@ -350,7 +350,10 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 			        	
 			        stopStart.setText("START ANIMACJI");
 					if(!centerPanel.running){
-						centerPanel.uruchomAnimacje();				
+						centerPanel.velX = vSourceSlider.getValue();
+						centerPanel.velXBlue = vObserverSlider.getValue();
+						centerPanel.uruchomAnimacje();	
+						
 					} else
 					{
 						centerPanel.tm.stop();
@@ -368,6 +371,12 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 			{
 				if(!centerPanel.running && !stopStart.isSelected()) {
 					centerPanel.reset();
+				} else if (stopStart.isSelected()) {
+					stopStart.setSelected(false);
+					stopStart.setText("START ANIMACJI");
+					centerPanel.tm.stop();
+					centerPanel.running = false;
+					centerPanel.reset();
 				}
 			}			
 		});
@@ -377,24 +386,6 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 		bottomPanel.add(sound);   
 		bottomPanel.add(stopStart);
 		bottomPanel.add(resetAnimation);
-		
-		vSourceSlider.addChangeListener(new ChangeListener()
-		{
-			@Override
-			public void stateChanged(ChangeEvent arg0) {
-				centerPanel.velX = vSourceSlider.getValue();	
-			}
-					
-		});
-		
-		vObserverSlider.addChangeListener(new ChangeListener()
-		{
-			@Override
-			public void stateChanged(ChangeEvent arg0) {
-				centerPanel.velXBlue = vObserverSlider.getValue();
-			}
-					
-		});
 		
 		//------------------------------
 		
