@@ -16,6 +16,7 @@ public class MainPanel extends JPanel implements ActionListener 	//Piotr Lebiedz
 	Timer tm;
 	int time = 0;
 	int xRedObject = 200, velX = 1;
+	int xBlueObject =600;
 	int velR = 4;
 	boolean running;
 	
@@ -54,6 +55,7 @@ public class MainPanel extends JPanel implements ActionListener 	//Piotr Lebiedz
             		circleR[i] = circleR[i] + velR;
         		}
         		
+        		//xBlueObject = xBlueObject - velX;     		
         		
         		time = time + 1;
         		if (time % frequency == 0)
@@ -79,7 +81,7 @@ public class MainPanel extends JPanel implements ActionListener 	//Piotr Lebiedz
 	{
 		super.paintComponent(g);
 		g.setColor(Color.BLUE);
-		g.fillRect(600 - 5, 300 - 5, 10, 10);
+		g.fillRect(xBlueObject - 5, 300 - 5, 10, 10);
 		
 		g.setColor(Color.RED);
 		g.fillRect(xRedObject - 5, 300 - 5, 10, 10);
