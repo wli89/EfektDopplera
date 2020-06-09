@@ -73,13 +73,6 @@ public class Chart extends JFrame implements ActionListener	//Weronika Lis
 		chartFrame.add(chartPanel);
 		chartFrame.setVisible(true);
 	
-		//series1.clear();	//uzuwanie poprzedniej serii  
-		
-		
-		//chartPanel = new ChartPanel(lineGraph);
-		//centralPanel.add(chartPanel);
-		//frame.add(chartPanel);
-	
     }
 
 		

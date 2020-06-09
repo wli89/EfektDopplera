@@ -207,8 +207,7 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 							  + " wysy³anej przez zród³o, które siê porusza\n"
 							  + " oraz czêstotliwoœci fali rejestrowanej przez\n"
 							  + " obserwatora.", 
-							  		"Co to za program?",JOptionPane.QUESTION_MESSAGE);
-						
+							  		"Co to za program?",JOptionPane.QUESTION_MESSAGE);		
 			}
 					
 		});
@@ -317,8 +316,8 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 	          
 	          if (sound.getSelectedItem().equals("1) Odg³os zrodla ")) 
 	          {
-	        	  		
-	  		    	play("./resources/1-welcome.wav");	//wstawiæ jakiœ dzwiêk zamiast tego
+	        	
+	  		    	play("./resources/1-welcome.wav");	//dzwiek przyk³adowy, inne nie dzi³a³y
 	  		    	audioClip.start();
 	        }
 	          if (sound.getSelectedItem().equals("Brak dzwiêku")) 
@@ -328,7 +327,7 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 	          
 	          if (sound.getSelectedItem().equals("2) Odg³os zrodl ")) 
 	          {
-	        	  	//play("./resources/1-welcome.wav");	//wstawiæ jakiœ INNY dzwiêk zamiast tego
+	        	  	//play("./resources/dzwiek2.mp3");	
 	  		    	//audioClip.start();
 	          }
 	        }
@@ -385,7 +384,7 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 			{
 				MediumLabel.setText("Prêd. w oœrodku[m/s] - DWUTLENEK WÊGLA");
 				MediumValueLabel.setText("259");
-			}
+			} 
 			
         }
 	}
@@ -462,7 +461,6 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 			exit.setText("Salia");
 			info.setText("Informacion");
 			language.setText("Elgir lengua");
-			
 			vSourceLabel.setText("Velocidad de fuente");
 			vObserverLabel.setText("Velocidad del observador");
 			MediumLabel.setText("Velo. of medium[m/s] - AIR");
@@ -583,7 +581,7 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
                 	resultField.setText(resultField.getText()+ " T ="+ (1/fk) + "s"+"\n");
                 	resultField.setText(resultField.getText()+ " d³.fali ="+ (vMe/fk) + "m"+"\n");
                 }
-               /* else if(vOb>0 & vSo>0 )	//Obserwator sie oddala, zród³o zbli¿a
+                else if(vOb>0 & vSo>0 )	//Obserwator sie oddala, zród³o zbli¿a
                 {
                 	double v = vMe-vOb;
                 	double v1 = vMe-vSo;
@@ -591,7 +589,7 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
                 	resultField.setText(resultField.getText()+ " f ="+ fk + "Hz"+"\n");
                 	resultField.setText(resultField.getText()+ " T ="+ (1/fk) + "s"+"\n");
                 	resultField.setText(resultField.getText()+ " d³.fali ="+ (vMe/fk) + "m"+"\n");
-                }*/
+                }
 
                 else if(vOb<0 & vSo<0)	//Obserwator siê zbli¿a, zród³o oddala
                 {

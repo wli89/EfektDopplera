@@ -14,9 +14,9 @@ public class MainPanel extends JPanel implements ActionListener 	//Piotr Lebiedz
 
 	Timer tm;
 	int time = 0;
-	int xRedObject = 200, velX = 1;
-	int xBlueObject =600;
-	int velR = 4;
+	int xRedObject = 200, velX = 3;
+	int xBlueObject = 600, velY = 0;
+	int velR = 6;
 	boolean running;
 	
 	private int[] circleX = new int [1000];
@@ -40,7 +40,7 @@ public class MainPanel extends JPanel implements ActionListener 	//Piotr Lebiedz
         			
         		} else {
         			for (int f = 1; f <1000; f++) {
-        				circleX[f] = circleX[f - 1] + frequency;
+        				circleX[f] = circleX[f - 1] + frequency*velX;
         			}
         			changeFrequency = false;
         		}
@@ -54,7 +54,7 @@ public class MainPanel extends JPanel implements ActionListener 	//Piotr Lebiedz
             		circleR[i] = circleR[i] + velR;
         		}
         		
-        		xBlueObject = xBlueObject - velX;     		
+        		xBlueObject = xBlueObject - velY;     		
         		
         		time = time + 1;
         		if (time % frequency == 0)
