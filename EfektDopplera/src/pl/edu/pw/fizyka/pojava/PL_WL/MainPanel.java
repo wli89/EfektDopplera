@@ -62,34 +62,7 @@ public class MainPanel extends JPanel implements ActionListener 	//Piotr Lebiedz
 	  	tm.start();
 	  	running = true;
 	}
-	
-    ActionListener listener1 = new ActionListener()
-    {
-		
-		@Override
-		public void actionPerformed(ActionEvent e) 
-		{
-			
-			if(!running){
-				uruchomAnimacje();				
-			}
-		}
-	};
-	
-	ActionListener listener2 = new ActionListener()
-	{
-		
-		@Override
-		public void actionPerformed(ActionEvent e)
-		{
-			
-			if(running){
-				tm.stop();
-				running = false;
-			}
-		}
-	};
-	
+
 	public void paintComponent(Graphics g)
 	{
 		super.paintComponent(g);
@@ -108,14 +81,6 @@ public class MainPanel extends JPanel implements ActionListener 	//Piotr Lebiedz
 	
 	public MainPanel()
 	{
-		
-		JButton b1 = new JButton("Animacja start");
-		b1.addActionListener(listener1);
-		add(b1);
-		JButton b2 = new JButton("Animacja pauza");
-		b2.addActionListener(listener2);
-		add(b2);
-		
 		Arrays.fill(circleX, 200);
 		Arrays.fill(circleY, 300);
 	}

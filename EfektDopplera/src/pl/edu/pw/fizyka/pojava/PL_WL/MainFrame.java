@@ -343,7 +343,7 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 	    
 	    stopStart = new JToggleButton("START ANIMACJI");
 	    stopStart.addActionListener(this);
-	    
+	   
 	    stopStart.addActionListener(new ActionListener()
 		{
 			@Override
@@ -354,6 +354,14 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 			        else  
 			        	
 			        stopStart.setText("START ANIMACJI");
+					if(!centerPanel.running){
+						centerPanel.uruchomAnimacje();				
+					} else
+					{
+						centerPanel.tm.stop();
+						centerPanel.running = false;
+					}
+					
 			}			
 		});
 		 
