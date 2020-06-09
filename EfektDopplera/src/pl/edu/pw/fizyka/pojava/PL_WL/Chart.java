@@ -28,6 +28,9 @@ public class Chart extends JFrame implements ActionListener	//Weronika Lis
 	private ChartPanel chartPanel;
 	private JPanel centralPanel;
 
+	double x;
+	double y;
+	
 	public void actionPerformed(ActionEvent e8) 
     {
 		Chart chartFrame = new Chart();
@@ -62,9 +65,9 @@ public class Chart extends JFrame implements ActionListener	//Weronika Lis
 		
 		lineGraph.setTitle("Funkcja sinus");
 		for(int i = 0; i < 100; i++)
-		{
-			double x = (i)/10.0;
-			double y = Math.sin(x);
+		{	
+			 x = (i)/10.0;
+			 y = Math.sin(x);
 			series1.addOrUpdate(x,y);
 		}
 		

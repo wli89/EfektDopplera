@@ -349,7 +349,10 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 			        	
 			        stopStart.setText("START ANIMACJI");
 					if(!centerPanel.running){
-						centerPanel.uruchomAnimacje();				
+						centerPanel.velX = vSourceSlider.getValue();
+						centerPanel.velXBlue = vObserverSlider.getValue();
+						centerPanel.uruchomAnimacje();	
+						
 					} else
 					{
 						centerPanel.tm.stop();
@@ -365,7 +368,13 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 			@Override
 			public void actionPerformed(ActionEvent arg0) 
 			{
-				if(!centerPanel.running) {
+				if(!centerPanel.running && !stopStart.isSelected()) {
+					centerPanel.reset();
+				} else if (stopStart.isSelected()) {
+					stopStart.setSelected(false);
+					stopStart.setText("START ANIMACJI");
+					centerPanel.tm.stop();
+					centerPanel.running = false;
 					centerPanel.reset();
 				}
 			}			
@@ -376,24 +385,6 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 		bottomPanel.add(sound);   
 		bottomPanel.add(stopStart);
 		bottomPanel.add(resetAnimation);
-		
-		vSourceSlider.addChangeListener(new ChangeListener()
-		{
-			@Override
-			public void stateChanged(ChangeEvent arg0) {
-				centerPanel.velX = vSourceSlider.getValue();	
-			}
-					
-		});
-		
-		vObserverSlider.addChangeListener(new ChangeListener()
-		{
-			@Override
-			public void stateChanged(ChangeEvent arg0) {
-				centerPanel.velXBlue = vObserverSlider.getValue();
-			}
-					
-		});
 		
 		//------------------------------
 		
@@ -475,8 +466,6 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 			resetButton.setText("Reset");
 			chartButton.setText("Chart");
 			MediumLabel.setText("V in medium [m/s] - WATER");
-			String sounds[]={"No sound", "1) Source sound ", "2) Source sound ",};        
-		    
 			
 		}
 	}
@@ -534,10 +523,10 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 		public void stateChanged(ChangeEvent e)
 		{
 			int value = vSourceSlider.getValue();
-			vSourceLabel.setText("Prêdkoœæ ród³a [m/s]:   " + value);
+			vSourceLabel.setText("Prêdkoœæ ród³a:   " + value);
 			
 			int value2 = vObserverSlider.getValue();
-			vObserverLabel.setText("Prêdkoœæ Obserwatowa [m/s]:   " + value2);
+			vObserverLabel.setText("Prêdkoœæ Obserwatora:   " + value2);
 		}
 	}
 	
@@ -550,7 +539,7 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
             String medium = MediumValueLabel.getText();
             int vSo = vSourceSlider.getValue();
             int vOb = vObserverSlider.getValue();
- 
+            double fk, v, v1;
             try
             {
                 freq = Double.parseDouble(frequency);
@@ -558,66 +547,66 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
               
                 if(vOb == vSo )	//oba nieruchome
                 {
-                	double fk = freq;
+                	fk = freq;
                 	resultField.setText(resultField.getText()+ " fk ="+ fk + "Hz"+"\n");
                 	resultField.setText(resultField.getText()+ " T ="+ (1/fk) + "s"+"\n");
                 	resultField.setText(resultField.getText()+ " d³.fali ="+ (vMe/fk) + "m"+"\n");
                 }
                 else if(vOb == 0 & vSo>0)	 //Zrodlo sie zbliza
                 {
-                  	double v = vMe-vSo;
-                  	double fk = freq*(vMe/v);
+                  	v = vMe-vSo;
+                  	fk = freq*(vMe/v);
                 	resultField.setText(resultField.getText()+ " fk = "+ fk + "Hz"+"\n");
                 	resultField.setText(resultField.getText()+ " T ="+ (1/fk) + "s"+"\n");
                 	resultField.setText(resultField.getText()+ " d³.fali ="+ (vMe/fk) + "m"+"\n");
                 }
                  else if(vOb == 0 & vSo<0)		//Zrodlo sie oddala
                 {
-                	 double v = vMe+vSo;
-                	 double fk = freq*(vMe/v);
+                	v = vMe+vSo;
+                	fk = freq*(vMe/v);
                 	resultField.setText(resultField.getText()+ " f ="+ fk + "Hz"+"\n");
                 	resultField.setText(resultField.getText()+ " T ="+ (1/fk) + "s"+"\n");
                 	resultField.setText(resultField.getText()+ " d³.fali ="+ (vMe/fk) + "m"+"\n");
                 }
                  else if(vOb<0 & vSo==0)	//Obserwator sie oddala
                 {
-                 	double v = vMe-vOb;
-                 	double fk = freq*(v/vMe);
+                 	v = vMe-vOb;
+                 	fk = freq*(v/vMe);
                 	resultField.setText(resultField.getText()+ " f ="+ fk + "Hz"+"\n");
                 	resultField.setText(resultField.getText()+ " T ="+ (1/fk) + "s"+"\n");
                 	resultField.setText(resultField.getText()+ "d³.fali ="+ (vMe/fk) + "m"+"\n");
                 }
                 else if(vOb>0 & vSo==0)		//Obserwator siê zbli¿a
                 {
-                	double v = vMe+vOb;
-                	double fk = freq*(v/vMe);
+                	v = vMe+vOb;
+                	fk = freq*(v/vMe);
                 	resultField.setText(resultField.getText()+ " f ="+ fk + "Hz"+"\n");
                 	resultField.setText(resultField.getText()+ " T ="+ (1/fk) + "s"+"\n");
                 	resultField.setText(resultField.getText()+ "d³.fali ="+ (vMe/fk) + "m"+"\n");
                 }
                 else if(vOb>0 & vSo<0)		//Obserwator i zród³o oddalaj¹ siê
                 {
-                	double v = vMe-vOb;
-                	double v1 = vMe+vSo;
-                	double fk = freq*(v/v1);
+                	v = vMe-vOb;
+                	v1 = vMe+vSo;
+                	fk = freq*(v/v1);
                 	resultField.setText(resultField.getText()+ " f ="+ fk + "Hz"+"\n");
                 	resultField.setText(resultField.getText()+ " T ="+ (1/fk) + "s"+"\n");
                 	resultField.setText(resultField.getText()+ " d³.fali ="+ (vMe/fk) + "m"+"\n");
                 }
                 else if(vOb<0 & vSo>0)	//Obserwator i zród³o zbli¿aj¹ siê
                 {
-                	double v = vMe+vOb;
-                	double v1 = vMe-vSo;
-                	double fk = freq*(v/v1);
+                	v = vMe+vOb;
+                	v1 = vMe-vSo;
+                	fk = freq*(v/v1);
                 	resultField.setText(resultField.getText()+ " f ="+ fk + "Hz"+"\n");
                 	resultField.setText(resultField.getText()+ " T ="+ (1/fk) + "s"+"\n");
                 	resultField.setText(resultField.getText()+ " d³.fali ="+ (vMe/fk) + "m"+"\n");
                 }
                 else if(vOb>0 & vSo>0 )	//Obserwator sie oddala, zród³o zbli¿a
                 {
-                	double v = vMe-vOb;
-                	double v1 = vMe-vSo;
-                	double fk = freq*(v/v1);
+                	v = vMe-vOb;
+                	v1 = vMe-vSo;
+                	fk = freq*(v/v1);
                 	resultField.setText(resultField.getText()+ " f ="+ fk + "Hz"+"\n");
                 	resultField.setText(resultField.getText()+ " T ="+ (1/fk) + "s"+"\n");
                 	resultField.setText(resultField.getText()+ " d³.fali ="+ (vMe/fk) + "m"+"\n");
@@ -625,9 +614,9 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 
                 else if(vOb<0 & vSo<0)	//Obserwator siê zbli¿a, zród³o oddala
                 {
-                	double v = vMe+vOb;
-                	double v1 = vMe+vSo;
-                	double fk = freq*(v/v1);
+                	v = vMe+vOb;
+                	v1 = vMe+vSo;
+                	fk = freq*(v/v1);
                 	resultField.setText(resultField.getText()+ " f ="+ fk + "Hz"+"\n");
                 	resultField.setText(resultField.getText()+ " T ="+ (1/fk) + "s"+"\n");
                 	resultField.setText(resultField.getText()+ " d³.fali ="+ (vMe/fk) + "m"+"\n");
@@ -656,7 +645,6 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 			vObserverSlider.setValue(0);
 			MediumLabel.setText("V oœrodka [m/s] - POWIETRZE");
 			MediumValueLabel.setText("343");
-			
 			
         }
 	}	
