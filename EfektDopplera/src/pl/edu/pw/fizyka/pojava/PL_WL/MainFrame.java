@@ -515,107 +515,89 @@ public class MainFrame extends JFrame implements ActionListener		//Piotr Lebiedz
 	{
 		public void actionPerformed(ActionEvent e) 
         {	
-            double number, vMe;
-            String freq = frequencyField.getText();
+            double freq, vMe;
+            String frequency = frequencyField.getText();
             String medium = MediumValueLabel.getText();
             int vSo = vSourceSlider.getValue();
             int vOb = vObserverSlider.getValue();
  
             try
             {
-                number = Double.parseDouble(freq);
+                freq = Double.parseDouble(frequency);
                 vMe = Double.parseDouble(medium);
-             
-                //rozne przypadki poruszania sie, 
-                if(vOb == vSo )	
+              
+                if(vOb == vSo )	//oba nieruchome
                 {
-                	double fk = number;
+                	double fk = freq;
+                	resultField.setText(resultField.getText()+ " fk ="+ fk + "Hz"+"\n");
+                	resultField.setText(resultField.getText()+ " T ="+ (1/fk) + "s"+"\n");
+                	resultField.setText(resultField.getText()+ " d³.fali ="+ (vMe/fk) + "m"+"\n");
+                }
+                else if(vOb == 0 & vSo>0)	 //Zrodlo sie zbliza
+                {
+                  	double v = vMe-vSo;
+                  	double fk = freq*(vMe/v);
+                	resultField.setText(resultField.getText()+ " fk = "+ fk + "Hz"+"\n");
+                	resultField.setText(resultField.getText()+ " T ="+ (1/fk) + "s"+"\n");
+                	resultField.setText(resultField.getText()+ " d³.fali ="+ (vMe/fk) + "m"+"\n");
+                }
+                 else if(vOb == 0 & vSo<0)		//Zrodlo sie oddala
+                {
+                	 double v = vMe+vSo;
+                	 double fk = freq*(vMe/v);
                 	resultField.setText(resultField.getText()+ " f ="+ fk + "Hz"+"\n");
                 	resultField.setText(resultField.getText()+ " T ="+ (1/fk) + "s"+"\n");
                 	resultField.setText(resultField.getText()+ " d³.fali ="+ (vMe/fk) + "m"+"\n");
                 }
-                else if(vOb == 0 & vSo>0)
-                {
-                  	double v = vMe+vSo;
-                  	double fk = number*(vMe/v);
-                	resultField.setText(resultField.getText()+ " f = "+ fk + "Hz"+"\n");
-                	resultField.setText(resultField.getText()+ " T ="+ (1/fk) + "s"+"\n");
-                	resultField.setText(resultField.getText()+ " d³.fali ="+ (vMe/fk) + "m"+"\n");
-                }
-                 else if(vOb == 0 & vSo<0)
-                {
-                	 double v = vMe-vSo;
-                	 double fk = number*(vMe/v);
-                	resultField.setText(resultField.getText()+ " f ="+ fk + "Hz"+"\n");
-                	resultField.setText(resultField.getText()+ " T ="+ (1/fk) + "s"+"\n");
-                	resultField.setText(resultField.getText()+ " d³.fali ="+ (vMe/fk) + "m"+"\n");
-                }
-                 else if(vOb<0 & vSo==0)
+                 else if(vOb<0 & vSo==0)	//Obserwator sie oddala
                 {
                  	double v = vMe-vOb;
-                 	double fk = number*(v/vMe);
+                 	double fk = freq*(v/vMe);
                 	resultField.setText(resultField.getText()+ " f ="+ fk + "Hz"+"\n");
                 	resultField.setText(resultField.getText()+ " T ="+ (1/fk) + "s"+"\n");
                 	resultField.setText(resultField.getText()+ "d³.fali ="+ (vMe/fk) + "m"+"\n");
                 }
-                else if(vOb>0 & vSo==0)
+                else if(vOb>0 & vSo==0)		//Obserwator siê zbli¿a
                 {
                 	double v = vMe+vOb;
-                	double fk = number*(v/vMe);
+                	double fk = freq*(v/vMe);
                 	resultField.setText(resultField.getText()+ " f ="+ fk + "Hz"+"\n");
                 	resultField.setText(resultField.getText()+ " T ="+ (1/fk) + "s"+"\n");
                 	resultField.setText(resultField.getText()+ "d³.fali ="+ (vMe/fk) + "m"+"\n");
                 }
-                else if(vOb>0 & vSo<0)//Obs i zr poruszaja sie w prawo; f'>f
-                {
-                	double v = vMe+vOb;
-                	double v1 = vMe-vSo;
-                	double fk = number*(v/v1);
-                	resultField.setText(resultField.getText()+ " f ="+ fk + "Hz"+"\n");
-                	resultField.setText(resultField.getText()+ " T ="+ (1/fk) + "s"+"\n");
-                	resultField.setText(resultField.getText()+ " d³.fali ="+ (vMe/fk) + "m"+"\n");
-                }
-                else if(vOb<0 & vSo>0)
+                else if(vOb>0 & vSo<0)		//Obserwator i zród³o oddalaj¹ siê
                 {
                 	double v = vMe-vOb;
                 	double v1 = vMe+vSo;
-                	double fk = number*(v/v1);
+                	double fk = freq*(v/v1);
                 	resultField.setText(resultField.getText()+ " f ="+ fk + "Hz"+"\n");
                 	resultField.setText(resultField.getText()+ " T ="+ (1/fk) + "s"+"\n");
                 	resultField.setText(resultField.getText()+ " d³.fali ="+ (vMe/fk) + "m"+"\n");
                 }
-                else if(vOb>0 & vSo>0 & vOb>vSo)
+                else if(vOb<0 & vSo>0)	//Obserwator i zród³o zbli¿aj¹ siê
                 {
                 	double v = vMe+vOb;
                 	double v1 = vMe-vSo;
-                	double fk = number*(v/v1);
+                	double fk = freq*(v/v1);
                 	resultField.setText(resultField.getText()+ " f ="+ fk + "Hz"+"\n");
                 	resultField.setText(resultField.getText()+ " T ="+ (1/fk) + "s"+"\n");
                 	resultField.setText(resultField.getText()+ " d³.fali ="+ (vMe/fk) + "m"+"\n");
                 }
-                else if(vOb>0 & vSo>0 & vOb<vSo)
+                else if(vOb>0 & vSo>0 )	//Obserwator sie oddala, zród³o zbli¿a
                 {
                 	double v = vMe-vOb;
-                	double v1 = vMe+vSo;
-                	double fk = number*(v/v1);
+                	double v1 = vMe-vSo;
+                	double fk = freq*(v/v1);
                 	resultField.setText(resultField.getText()+ " f ="+ fk + "Hz"+"\n");
                 	resultField.setText(resultField.getText()+ " T ="+ (1/fk) + "s"+"\n");
-                	resultField.setText(resultField.getText()+ "d³.fali ="+ (vMe/fk) + "m"+"\n");
+                	resultField.setText(resultField.getText()+ " d³.fali ="+ (vMe/fk) + "m"+"\n");
                 }
-                else if(vOb<0 & vSo<0 & vOb<vSo)
+
+                else if(vOb<0 & vSo<0)	//Obserwator siê zbli¿a, zród³o oddala
                 {
                 	double v = vMe+vOb;
-                	double v1 = vMe-vSo;
-                	double fk = number*(v/v1);
-                	resultField.setText(resultField.getText()+ " f ="+ fk + "Hz"+"\n");
-                	resultField.setText(resultField.getText()+ " T ="+ (1/fk) + "s"+"\n");
-                	resultField.setText(resultField.getText()+ " d³.fali ="+ (vMe/fk) + "m"+"\n");
-                }
-                else if(vOb<0 & vSo<0 & vOb>vSo)
-                {
-                	double v = vMe-vOb;
                 	double v1 = vMe+vSo;
-                	double fk = number*(v/v1);
+                	double fk = freq*(v/v1);
                 	resultField.setText(resultField.getText()+ " f ="+ fk + "Hz"+"\n");
                 	resultField.setText(resultField.getText()+ " T ="+ (1/fk) + "s"+"\n");
                 	resultField.setText(resultField.getText()+ " d³.fali ="+ (vMe/fk) + "m"+"\n");
